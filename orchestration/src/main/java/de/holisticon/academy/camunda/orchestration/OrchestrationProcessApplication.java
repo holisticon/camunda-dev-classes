@@ -1,6 +1,5 @@
 package de.holisticon.academy.camunda.orchestration;
 
-
 import org.camunda.bpm.application.ProcessApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,3 +13,5 @@ public class OrchestrationProcessApplication {
   }
 
 }
+
+

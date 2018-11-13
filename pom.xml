@@ -82,6 +82,13 @@
         <type>pom</type>
       </dependency>
 
+      <!-- Swagger -->
+      <dependency>
+        <groupId>io.toolisticon.springboot</groupId>
+        <artifactId>springboot-swagger-starter</artifactId>
+        <version>0.0.4</version>
+      </dependency>
+
       <!-- Testing -->
       <dependency>
         <groupId>junit</groupId>
@@ -135,35 +142,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.0.0</version>
-        </plugin>
-
-        <plugin>
-          <!-- for generating stubs -->
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-codegen-maven-plugin</artifactId>
-          <version>2.3.1</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.sylvainlaurent.maven</groupId>
-          <artifactId>swagger-validator-maven-plugin</artifactId>
-          <version>1.2.2</version>
-          <executions>
-            <execution>
-              <id>validate</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>validate</goal>
-              </goals>
-              <configuration>
-                <failOnErrors>true</failOnErrors>
-                <includes>
-                  <include>src/main/resources/swagger.yml</include>
-                  <!-- other <include> may be added -->
-                </includes>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
 
         <!-- Coverage metering -->

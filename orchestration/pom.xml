@@ -36,5 +36,10 @@
       <artifactId>groovy-all</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.toolisticon.springboot</groupId>
+      <artifactId>springboot-swagger-starter</artifactId>
+    </dependency>
+
   </dependencies>
 </project>
