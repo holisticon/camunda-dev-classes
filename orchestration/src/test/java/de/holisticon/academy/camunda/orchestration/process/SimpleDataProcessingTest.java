@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -11,11 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.*;
+import static de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Elements;
+import static de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Expressions;
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.mockito.Mockito.mock;
 
 @RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = "simple-data-processing.bpmn")
@@ -31,7 +34,7 @@ public class SimpleDataProcessingTest {
     this.processBean = new SimpleDataProcessingProcessBean(this.engine.getRuntimeService());
     init(engine.getProcessEngine());
 
-    Mocks.register(Expressions.LOAD_DATA_DELEGATE, new LoadDataDelegate());
+    Mocks.register(Expressions.LOAD_DATA_DELEGATE, new LoadDataDelegate(mock(ApprovalRequestRepository.class)));
   }
 
   @Test
@@ -41,7 +44,7 @@ public class SimpleDataProcessingTest {
 
   @Test
   public void shouldStartWaitInProcessingStarted() {
-    ProcessInstance instance = this.processBean.start();
+    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.STARTED);
@@ -50,7 +53,7 @@ public class SimpleDataProcessingTest {
 
   @Test
   public void shouldStartAndLoadAndComplete() {
-    ProcessInstance instance = this.processBean.start();
+    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.STARTED);

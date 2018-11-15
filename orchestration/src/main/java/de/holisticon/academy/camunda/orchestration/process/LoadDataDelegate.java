@@ -1,5 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Variables;
+import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -13,7 +15,18 @@ public class LoadDataDelegate implements JavaDelegate {
 
   private static final Logger logger = LoggerFactory.getLogger(LoadDataDelegate.class);
 
+  private final ApprovalRequestRepository approvalRequestRepository;
+
+  public LoadDataDelegate(ApprovalRequestRepository approvalRequestRepository) {
+    this.approvalRequestRepository = approvalRequestRepository;
+  }
+
   public void execute(DelegateExecution execution) {
-    logger.info("Executed by process instance {}", execution.getProcessInstanceId());
+    String id = (String) execution.getVariable(Variables.APPROVAL_ID);
+
+    approvalRequestRepository.findById(id).ifPresent(approvalRequest -> {
+      execution.setVariable(Variables.AMOUNT, approvalRequest.getAmount());
+      logger.info("Setting amount {} as variable", approvalRequest.getAmount());
+    });
   }
 }
