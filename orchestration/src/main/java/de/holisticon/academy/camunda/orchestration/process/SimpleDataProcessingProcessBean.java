@@ -21,15 +21,20 @@ public class SimpleDataProcessingProcessBean {
   enum Elements {
     ;
 
-    static String STARTED = "processing_started";
-    static String LOAD_DATA = "service_load_data";
-    static String COMPLETED = "processing_completed";
+    final static String STARTED = "processing_started";
+    final static String LOAD_DATA = "service_load_data";
+    final static String COMPLETED = "processing_completed";
   }
 
   enum Variables {
     ;
 
-    // variables goes here
-    static String APPROVAL_ID = "approvalId";
+    final static String APPROVAL_ID = "approvalId";
+    final static String AMOUNT = "amount";
+  }
+
+  enum Expressions {
+    ;
+    final static String LOAD_DATA_DELEGATE = "loadDataDelegate";
   }
 }
