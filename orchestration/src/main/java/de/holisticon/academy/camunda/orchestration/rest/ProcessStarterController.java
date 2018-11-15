@@ -24,7 +24,7 @@ public class ProcessStarterController {
     this.simpleDataProcessingProcessBean = new SimpleDataProcessingProcessBean(runtimeService);
   }
 
-  @PostMapping(name = "/simple-data-processing/{id}")
+  @PostMapping(path = "/simple-data-processing")
   @ApiOperation(httpMethod = "POST", value = "Starts simple_data_processing process.", response = String.class)
   public ResponseEntity<String> startSimpleDataProcessingProcess(@PathVariable(name = "id") String id) {
     ProcessInstance instance = simpleDataProcessingProcessBean.start(id);
