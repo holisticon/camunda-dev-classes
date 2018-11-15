@@ -22,7 +22,7 @@ public class ProcessStarterController {
     this.runtimeService = runtimeService;
   }
 
-  @PostMapping(name = "/simple-data-processing")
+  @PostMapping(path = "/simple-data-processing")
   @ApiOperation(httpMethod = "POST", value = "Starts simple_data_processing process.", response = String.class)
   public ResponseEntity<String> startSimpleDataProcessingProcess() {
     ProcessInstance instance = this.runtimeService.startProcessInstanceByKey("simple_data_processing");
