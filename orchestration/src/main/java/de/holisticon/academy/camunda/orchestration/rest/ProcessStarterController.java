@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
+import de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
@@ -16,16 +17,16 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/process/start")
 public class ProcessStarterController {
 
-  private final RuntimeService runtimeService;
+  private final SimpleDataProcessingProcessBean simpleDataProcessingProcessBean;
 
   public ProcessStarterController(RuntimeService runtimeService) {
-    this.runtimeService = runtimeService;
+    this.simpleDataProcessingProcessBean = new SimpleDataProcessingProcessBean(runtimeService);
   }
 
   @PostMapping(name = "/simple-data-processing")
   @ApiOperation(httpMethod = "POST", value = "Starts simple_data_processing process.", response = String.class)
   public ResponseEntity<String> startSimpleDataProcessingProcess() {
-    ProcessInstance instance = this.runtimeService.startProcessInstanceByKey("simple_data_processing");
+    ProcessInstance instance = simpleDataProcessingProcessBean.start();
     return ok(instance.getProcessInstanceId());
   }
 
