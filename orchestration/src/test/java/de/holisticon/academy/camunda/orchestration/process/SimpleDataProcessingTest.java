@@ -32,5 +32,13 @@ public class SimpleDataProcessingTest {
   public void shouldDeploy() {
     // no asserts, deployment would throw exception and fail the test on errors
   }
-  
+
+  @Test
+  public void shouldStartWaitInProcessingStarted() {
+    ProcessInstance instance = this.processBean.start();
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(SimpleDataProcessingProcessBean.Elements.STARTED);
+  }
+
 }
