@@ -6,35 +6,36 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 /**
  * Encapsulates all API methods around the process and Camunda
  */
-public class SimpleDataProcessingProcessBean {
+public class ApprovalProcessBean {
 
   private final RuntimeService runtimeService;
 
-  public SimpleDataProcessingProcessBean(RuntimeService runtimeService) {
+  public ApprovalProcessBean(RuntimeService runtimeService) {
     this.runtimeService = runtimeService;
   }
 
   public ProcessInstance start() {
-    return this.runtimeService.startProcessInstanceByKey("simple_data_processing");
+    return this.runtimeService.startProcessInstanceByKey("approval");
   }
 
   enum Elements {
     ;
 
-    final static String STARTED = "processing_started";
-    final static String LOAD_DATA = "service_load_data";
+    final static String APPROVAL_REQUESTED = "approval_requested";
+    final static String LOAD_APPROVAL_REQUEST = "service_load_approval_request";
     final static String COMPLETED = "processing_completed";
   }
 
   enum Variables {
     ;
 
+    // variables goes here
     final static String APPROVAL_ID = "approvalId";
-    final static String AMOUNT = "amount";
   }
 
   enum Expressions {
     ;
-    final static String LOAD_DATA_DELEGATE = "loadDataDelegate";
+
+    final static String LOAD_APPROVAL_REQUEST = "loadApprovalRequestDelegate";
   }
 }
