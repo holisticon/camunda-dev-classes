@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -44,7 +45,7 @@ public class ApprovalTest {
     ProcessInstance instance = this.processBean.start();
 
     assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(ApprovalProcessBean.Elements.APPROVAL_REQUESTED);
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
   }
 
 
@@ -53,13 +54,13 @@ public class ApprovalTest {
     ProcessInstance instance = this.processBean.start();
 
     assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(ApprovalProcessBean.Elements.APPROVAL_REQUESTED);
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
 
     execute(job());
 
     assertThat(instance).isEnded();
     assertThat(instance).hasPassedInOrder(
-      ApprovalProcessBean.Elements.APPROVAL_REQUESTED, ApprovalProcessBean.Elements.LOAD_APPROVAL_REQUEST, ApprovalProcessBean.Elements.COMPLETED);
+      Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
 
   }
 
