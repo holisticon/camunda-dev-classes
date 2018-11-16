@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-@Api(value = "/process/start", description = "Starter for processes.")
+@Api(value = "/process/start")
 @RestController
 @RequestMapping("/process/start")
 public class ProcessStarterController {
@@ -22,10 +22,10 @@ public class ProcessStarterController {
     this.runtimeService = runtimeService;
   }
 
-  @PostMapping(path = "/simple-data-processing")
-  @ApiOperation(httpMethod = "POST", value = "Starts simple_data_processing process.", response = String.class)
-  public ResponseEntity<String> startSimpleDataProcessingProcess() {
-    ProcessInstance instance = this.runtimeService.startProcessInstanceByKey("simple_data_processing");
+  @PostMapping(path = "/approval")
+  @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
+  public ResponseEntity<String> startApprovalProcess() {
+    ProcessInstance instance = this.runtimeService.startProcessInstanceByKey("approval");
     return ok(instance.getProcessInstanceId());
   }
 
