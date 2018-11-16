@@ -1,6 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
-import de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Variables;
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Variables;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
@@ -18,7 +18,7 @@ public class LoadDataDelegateTest {
 
   private ApprovalRequestRepository approvalRequestRepository = Mockito.mock(ApprovalRequestRepository.class);
 
-  private LoadDataDelegate delegate = new LoadDataDelegate(approvalRequestRepository);
+  private LoadApprovalRequestDelegate delegate = new LoadApprovalRequestDelegate(approvalRequestRepository);
 
   @Test
   public void shouldSetVariable() {

@@ -1,5 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -11,9 +13,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
-import static de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Elements;
-import static de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean.Expressions;
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
@@ -21,20 +22,20 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.mockito.Mockito.mock;
 
 @RunWith(ProcessEngineRuleRunner.class)
-@Deployment(resources = "simple-data-processing.bpmn")
-public class SimpleDataProcessingTest {
+@Deployment(resources = "approval.bpmn")
+public class ApprovalTest {
 
 
   @Rule
   public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-  private SimpleDataProcessingProcessBean processBean;
+  private ApprovalProcessBean processBean;
 
   @Before
   public void before() {
-    this.processBean = new SimpleDataProcessingProcessBean(this.engine.getRuntimeService());
+    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
     init(engine.getProcessEngine());
 
-    Mocks.register(Expressions.LOAD_DATA_DELEGATE, new LoadDataDelegate(mock(ApprovalRequestRepository.class)));
+    Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate(mock(ApprovalRequestRepository.class)));
   }
 
   @Test
@@ -43,26 +44,26 @@ public class SimpleDataProcessingTest {
   }
 
   @Test
-  public void shouldStartWaitInProcessingStarted() {
+  public void shouldStartWaitInApprovalRequested() {
     ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(Elements.STARTED);
-
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
   }
+
 
   @Test
   public void shouldStartAndLoadAndComplete() {
     ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(Elements.STARTED);
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
 
     execute(job());
 
     assertThat(instance).isEnded();
     assertThat(instance).hasPassedInOrder(
-      Elements.STARTED, Elements.LOAD_DATA, Elements.COMPLETED);
+      Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
 
   }
 
