@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
@@ -13,8 +14,8 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.ini
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 
 @RunWith(ProcessEngineRuleRunner.class)
-@Deployment(resources = "simple-data-processing.bpmn")
-public class SimpleDataProcessingTest {
+@Deployment(resources = "approval.bpmn")
+public class ApprovalTest {
 
 
   @Rule
@@ -33,11 +34,11 @@ public class SimpleDataProcessingTest {
   }
 
   @Test
-  public void shouldStartWaitInProcessingStarted() {
+  public void shouldStartWaitInApprovalRequested() {
     ProcessInstance instance = this.processBean.start();
 
     assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(SimpleDataProcessingProcessBean.Elements.STARTED);
+    assertThat(instance).isWaitingAt(ApprovalProcessBean.Elements.APPROVAL_REQUESTED);
   }
 
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1oa9vab" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
   <bpmn:process id="approval" name="Approval" isExecutable="true">
-    <bpmn:startEvent id="processing_started" name="Approval requested" camunda:asyncAfter="true">
+    <bpmn:startEvent id="approval_requested" name="Approval requested" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_1ybc6go</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="processing_started" targetRef="service_load_approval_request" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="approval_requested" targetRef="service_load_approval_request" />
     <bpmn:endEvent id="processing_completed" name="Processing completed">
       <bpmn:incoming>SequenceFlow_0ud27qg</bpmn:incoming>
     </bpmn:endEvent>
@@ -16,7 +16,7 @@
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="approval">
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="processing_started">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="approval_requested">
         <dc:Bounds x="223" y="181" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="219" y="224" width="49" height="27" />
