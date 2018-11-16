@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoadDataDelegate implements JavaDelegate {
+public class LoadApprovalRequestDelegate implements JavaDelegate {
 
-  private static final Logger logger = LoggerFactory.getLogger(LoadDataDelegate.class);
+  private static final Logger logger = LoggerFactory.getLogger(LoadApprovalRequestDelegate.class);
 
   public void execute(DelegateExecution execution) {
     logger.info("Executed by process instance {}", execution.getProcessInstanceId());

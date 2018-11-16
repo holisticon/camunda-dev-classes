@@ -11,7 +11,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     generate-ddl: false
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: create
     show-sql: false
     open-in-view: false
 

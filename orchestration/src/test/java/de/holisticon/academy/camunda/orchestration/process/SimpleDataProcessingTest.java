@@ -1,6 +1,5 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
@@ -20,11 +19,11 @@ public class SimpleDataProcessingTest {
 
   @Rule
   public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-  private SimpleDataProcessingProcessBean processBean;
+  private ApprovalProcessBean processBean;
 
   @Before
   public void before() {
-    this.processBean = new SimpleDataProcessingProcessBean(this.engine.getRuntimeService());
+    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
     init(engine.getProcessEngine());
   }
 
