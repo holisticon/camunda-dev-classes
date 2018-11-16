@@ -1,6 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
-import de.holisticon.academy.camunda.orchestration.process.SimpleDataProcessingProcessBean;
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
@@ -17,16 +17,16 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/process/start")
 public class ProcessStarterController {
 
-  private final SimpleDataProcessingProcessBean simpleDataProcessingProcessBean;
+  private final ApprovalProcessBean approvalProcessBean;
 
   public ProcessStarterController(RuntimeService runtimeService) {
-    this.simpleDataProcessingProcessBean = new SimpleDataProcessingProcessBean(runtimeService);
+    this.approvalProcessBean = new ApprovalProcessBean(runtimeService);
   }
 
   @PostMapping(path = "/approval")
   @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
   public ResponseEntity<String> startApprovalProcess() {
-    ProcessInstance instance = simpleDataProcessingProcessBean.start();
+    ProcessInstance instance = approvalProcessBean.start();
     return ok(instance.getProcessInstanceId());
   }
 
