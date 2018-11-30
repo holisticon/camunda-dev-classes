@@ -59,7 +59,7 @@ public class ApprovalTest {
   @Test
   public void shouldStartAndLoadAndApprove() {
     CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, "Automatic"));
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_AUTOMATIC));
 
     ProcessInstance instance = this.processBean.start("1");
 

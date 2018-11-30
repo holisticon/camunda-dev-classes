@@ -20,6 +20,8 @@ camunda:
     default-serialization-format: application/json
     authorization:
       enabled: false
+    filter:
+      create: All
     history-level: activity
     id-generator: strong
     database:
