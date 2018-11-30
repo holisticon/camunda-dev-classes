@@ -47,7 +47,8 @@ public class ApprovalProcessBean {
     ;
 
     final static String LOAD_APPROVAL_REQUEST = "loadApprovalRequestDelegate";
-    final static String DETERMINE_APPROVAL_STRATEGY ="determineApprovalStrategyDelegate";
+    final static String DETERMINE_APPROVAL_STRATEGY = "determineApprovalStrategyDelegate";
+    final static String AUTO_APPROVE_REQUEST = "autoApproveRequestDelegate";
   }
 
   public enum Values {
