@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: camunda-choreography
+  datasource:
+    url: jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: create
+    show-sql: false
+    open-in-view: false
+
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: false
+    history-level: activity
+    id-generator: strong
+    database:
+      schema-update: true
+      type: h2
+    webapp:
+      index-redirect-enabled: false
+    admin-user:
+      id: admin
+      first-name: Admin
+      last-name: Administratus
+      password: admin
+    filter:
+      create: All
+
+swagger:
+  enabled: true
+  apiInfo:
+    title: Camunda Developer Workshop Classes
+    description: Use REST endpoints.
+    contact:
+      name: Holisticon AG
+      email: bpmsoa@holisticon.de
+      url: https://www.holisticon.de
+  dockets:
+    orchestration:
+      basePackage: "de.holisticon.academy.camunda.choreography.rest"
+      path: "/**"

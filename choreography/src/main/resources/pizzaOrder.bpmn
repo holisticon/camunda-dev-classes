@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0rsidqy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+  <bpmn:collaboration id="Collaboration_1timafs">
+    <bpmn:participant id="Participant_14ejuqd" name="Pizza order" processRef="pizza_order" />
+    <bpmn:participant id="Participant_1mvcl63" name="Pizza delivery" processRef="pizza_delivery" />
+    <bpmn:messageFlow id="MessageFlow_06zvwx2" sourceRef="task_place_order" targetRef="order_placed" />
+    <bpmn:messageFlow id="MessageFlow_03uu66z" sourceRef="Task_1vw7nqp" targetRef="message_event_pizza_received" />
+  </bpmn:collaboration>
+  <bpmn:process id="pizza_order" name="Pizza order" isExecutable="true">
+    <bpmn:startEvent id="food_needed" name="Food needed">
+      <bpmn:outgoing>SequenceFlow_0u2axqi</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0u2axqi" sourceRef="food_needed" targetRef="task_place_order" />
+    <bpmn:sequenceFlow id="SequenceFlow_11fsip4" sourceRef="task_place_order" targetRef="ExclusiveGateway_1e8w9pl" />
+    <bpmn:eventBasedGateway id="ExclusiveGateway_1e8w9pl">
+      <bpmn:incoming>SequenceFlow_11fsip4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_04o80rh</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_08q4a21</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_06llyhu" name="1h">
+      <bpmn:incoming>SequenceFlow_04o80rh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03xds2k</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P1H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_04o80rh" sourceRef="ExclusiveGateway_1e8w9pl" targetRef="IntermediateCatchEvent_06llyhu" />
+    <bpmn:endEvent id="pizza_not_received" name="Pizza not received">
+      <bpmn:incoming>SequenceFlow_03xds2k</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_03xds2k" sourceRef="IntermediateCatchEvent_06llyhu" targetRef="pizza_not_received" />
+    <bpmn:intermediateCatchEvent id="message_event_pizza_received" name="Receive pizza">
+      <bpmn:incoming>SequenceFlow_08q4a21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qdoxbq</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0b5uqs9" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_08q4a21" sourceRef="ExclusiveGateway_1e8w9pl" targetRef="message_event_pizza_received" />
+    <bpmn:endEvent id="pizza_received" name="Pizza received">
+      <bpmn:incoming>SequenceFlow_1qdoxbq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1qdoxbq" sourceRef="message_event_pizza_received" targetRef="pizza_received" />
+    <bpmn:sendTask id="task_place_order" name="Place order" camunda:delegateExpression="${placeOrderDelegate}">
+      <bpmn:incoming>SequenceFlow_0u2axqi</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11fsip4</bpmn:outgoing>
+    </bpmn:sendTask>
+  </bpmn:process>
+  <bpmn:process id="pizza_delivery" name="Pizza delivery" isExecutable="true">
+    <bpmn:startEvent id="order_placed" name="Order placed">
+      <bpmn:outgoing>SequenceFlow_000bhhh</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_11le573" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_000bhhh" sourceRef="order_placed" targetRef="task_make_pizza" />
+    <bpmn:sequenceFlow id="SequenceFlow_1lvwny4" sourceRef="task_make_pizza" targetRef="Task_1vw7nqp" />
+    <bpmn:endEvent id="pizza_delivered" name="Pizza delivered">
+      <bpmn:incoming>SequenceFlow_194w8qg</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_194w8qg" sourceRef="Task_1vw7nqp" targetRef="pizza_delivered" />
+    <bpmn:sendTask id="Task_1vw7nqp" name="Deliver pizza" camunda:delegateExpression="${deliverPizzaDelegate}">
+      <bpmn:incoming>SequenceFlow_1lvwny4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_194w8qg</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="task_make_pizza" name="Make pizza" camunda:delegateExpression="${makePizzaDelegate}">
+      <bpmn:incoming>SequenceFlow_000bhhh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1lvwny4</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:message id="Message_0b5uqs9" name="pizzaReceived" />
+  <bpmn:message id="Message_11le573" name="placeOrder" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1timafs">
+      <bpmndi:BPMNShape id="Participant_14ejuqd_di" bpmnElement="Participant_14ejuqd">
+        <dc:Bounds x="111" y="104" width="625" height="291" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="food_needed">
+        <dc:Bounds x="176" y="213" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="162" y="256" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u2axqi_di" bpmnElement="SequenceFlow_0u2axqi">
+        <di:waypoint x="212" y="231" />
+        <di:waypoint x="260" y="231" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_11fsip4_di" bpmnElement="SequenceFlow_11fsip4">
+        <di:waypoint x="360" y="231" />
+        <di:waypoint x="391" y="231" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EventBasedGateway_0u4mip1_di" bpmnElement="ExclusiveGateway_1e8w9pl">
+        <dc:Bounds x="391" y="206" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_06llyhu_di" bpmnElement="IntermediateCatchEvent_06llyhu">
+        <dc:Bounds x="477" y="136" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="489" y="179" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_04o80rh_di" bpmnElement="SequenceFlow_04o80rh">
+        <di:waypoint x="416" y="206" />
+        <di:waypoint x="416" y="154" />
+        <di:waypoint x="477" y="154" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_13skk62_di" bpmnElement="pizza_not_received">
+        <dc:Bounds x="591" y="136" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="564" y="179" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_03xds2k_di" bpmnElement="SequenceFlow_03xds2k">
+        <di:waypoint x="513" y="154" />
+        <di:waypoint x="591" y="154" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_02c218b_di" bpmnElement="message_event_pizza_received">
+        <dc:Bounds x="477" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="460" y="268" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_08q4a21_di" bpmnElement="SequenceFlow_08q4a21">
+        <di:waypoint x="416" y="256" />
+        <di:waypoint x="416" y="310" />
+        <di:waypoint x="477" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1lxwj5d_di" bpmnElement="pizza_received">
+        <dc:Bounds x="591" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="573" y="335" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qdoxbq_di" bpmnElement="SequenceFlow_1qdoxbq">
+        <di:waypoint x="513" y="310" />
+        <di:waypoint x="591" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1mvcl63_di" bpmnElement="Participant_1mvcl63">
+        <dc:Bounds x="111" y="469" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_1d28j23_di" bpmnElement="task_place_order">
+        <dc:Bounds x="260" y="191" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_06zvwx2_di" bpmnElement="MessageFlow_06zvwx2">
+        <di:waypoint x="310" y="271" />
+        <di:waypoint x="310" y="427" />
+        <di:waypoint x="207" y="427" />
+        <di:waypoint x="207" y="583" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1993uls_di" bpmnElement="order_placed">
+        <dc:Bounds x="189" y="583" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="175" y="626" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_000bhhh_di" bpmnElement="SequenceFlow_000bhhh">
+        <di:waypoint x="225" y="601" />
+        <di:waypoint x="270" y="601" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1lvwny4_di" bpmnElement="SequenceFlow_1lvwny4">
+        <di:waypoint x="370" y="601" />
+        <di:waypoint x="445" y="601" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_03uu66z_di" bpmnElement="MessageFlow_03uu66z">
+        <di:waypoint x="495" y="561" />
+        <di:waypoint x="495" y="328" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_01gdx85_di" bpmnElement="pizza_delivered">
+        <dc:Bounds x="595" y="583" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="576" y="626" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_194w8qg_di" bpmnElement="SequenceFlow_194w8qg">
+        <di:waypoint x="545" y="601" />
+        <di:waypoint x="595" y="601" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1j4rpp2_di" bpmnElement="Task_1vw7nqp">
+        <dc:Bounds x="445" y="561" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_01yshkk_di" bpmnElement="task_make_pizza">
+        <dc:Bounds x="270" y="561" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
