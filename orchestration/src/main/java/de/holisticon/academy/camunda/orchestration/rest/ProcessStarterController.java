@@ -24,7 +24,7 @@ public class ProcessStarterController {
     this.approvalProcessBean = new ApprovalProcessBean(runtimeService);
   }
 
-  @PostMapping(path = "/approval")
+  @PostMapping(path = "/approval/{id}")
   @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
   public ResponseEntity<String> startApprovalProcess(@PathVariable(name = "id") String id) {
     ProcessInstance instance = approvalProcessBean.start(id);
