@@ -34,7 +34,7 @@ public class ApprovalTest {
 
   @Before
   public void before() {
-    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
+    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService(), this.engine.getTaskService());
     init(engine.getProcessEngine());
 
     CamundaMockito.registerJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY);
