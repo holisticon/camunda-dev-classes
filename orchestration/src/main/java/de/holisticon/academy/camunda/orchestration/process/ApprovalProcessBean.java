@@ -47,6 +47,7 @@ public class ApprovalProcessBean {
     // variables goes here
     final static String APPROVAL_ID = "approvalId";
     final static String AMOUNT = "amount";
+    final static String REQUEST = "request";
     final static String APPROVAL_STRATEGY = "approvalStrategy";
 
     public final static String APPROVAL_DECISION = "approvalDecision";
@@ -58,7 +59,7 @@ public class ApprovalProcessBean {
 
     final static String LOAD_APPROVAL_REQUEST = "loadApprovalRequestDelegate";
     final static String DETERMINE_APPROVAL_STRATEGY = "determineApprovalStrategyDelegate";
-    final static String AUTO_APPROVE_REQUEST = "autoApproveRequestDelegate";
+    final static String AUTO_APPROVE_REQUEST = "automaticApproveRequestDelegate";
   }
 
   public enum Values {

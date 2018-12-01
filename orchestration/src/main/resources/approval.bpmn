@@ -31,7 +31,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="flow_manual" name="Manual" sourceRef="xor_approval_strategy" targetRef="task_approve_request" />
     <bpmn:sequenceFlow id="SequenceFlow_06pxplx" sourceRef="service_auto_approve_delegate" targetRef="ExclusiveGateway_0aog2p3" />
-    <bpmn:serviceTask id="service_auto_approve_delegate" name="Auto approve&#10;request" camunda:delegateExpression="${autoApproveRequestDelegate}">
+    <bpmn:serviceTask id="service_auto_approve_delegate" name="Auto approve&#10;request" camunda:delegateExpression="${automaticApproveRequestDelegate}">
       <bpmn:incoming>flow_automatic</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_06pxplx</bpmn:outgoing>
     </bpmn:serviceTask>
