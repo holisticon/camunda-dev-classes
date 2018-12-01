@@ -20,7 +20,7 @@ declare -a BRANCHES=(
     "class/12-timer"
 )
 
-git pull origin ${BRANCHES[0]} --rebase
+git fetch --all
 
 ## now loop through the above array
 for (( i = 1; i < ${#BRANCHES[*]}; ++ i ))
@@ -30,8 +30,6 @@ do
 
     echo "Checking out $CURRENT"
     git checkout $CURRENT
-    echo "Getting latest changes"
-    git pull origin $CURRENT --rebase
     echo "Merging changes from $PREVIOUS"
     git merge $PREVIOUS --no-edit
     echo "Pushing results"
