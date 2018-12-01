@@ -181,7 +181,6 @@ public class ApprovalTest {
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
 
-
   static ProcessEngineRule createEngine() {
     StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
     config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
