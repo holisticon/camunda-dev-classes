@@ -15,29 +15,26 @@ node {
   timestamps {
 
     try {
-
-      dir(projectHome) {
-
         stage('Checkout project') {
-          checkout scm
-          sh "chmod 755 ./mvnw"
+            checkout scm
+            sh "chmod 755 ./mvnw"
         }
 
         stage('Build') {
-          sh "./mvnw clean install ${mvnOpts}"
+            sh "./mvnw clean install ${mvnOpts}"
         }
-        stage('I-Test') {
-          sh "./mvnw integration-test -Pitest ${mvnOpts}"
 
-          try {
+        stage('I-Test') {
+            sh "./mvnw integration-test -Pitest ${mvnOpts}"
+
+            try {
             // check if there were errors
             sh "./mvnw failsafe:verify ${mvnOpts}"
-          } catch (buildError) {
+            } catch (buildError) {
             // set status to unstable, if errors found
             currentBuild.result = "UNSTABLE"
-          }
+            }
         }
-      } // dir
 
     } catch (caughtError) {
       err = caughtError
