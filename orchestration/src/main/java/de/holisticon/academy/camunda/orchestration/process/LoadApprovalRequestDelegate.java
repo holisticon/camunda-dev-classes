@@ -25,8 +25,8 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
     String id = (String) execution.getVariable(Variables.APPROVAL_ID);
 
     approvalRequestRepository.findById(id).ifPresent(approvalRequest -> {
-      execution.setVariable(Variables.AMOUNT, approvalRequest.getAmount());
-      logger.info("Setting amount {} as variable", approvalRequest.getAmount());
+      execution.setVariable(Variables.REQUEST, approvalRequest);
+      logger.info("Setting request {} as variable", approvalRequest);
     });
   }
 }

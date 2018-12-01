@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,8 @@ public class DetermineApprovalStrategyDelegate implements JavaDelegate {
 
   @Override
   public void execute(DelegateExecution delegateExecution) {
-    final BigDecimal amount = (BigDecimal) delegateExecution.getVariable(ApprovalProcessBean.Variables.AMOUNT);
-    if (AUTO_STRATEGY_THRESHOLD.compareTo(amount) > 0) {
+    final ApprovalRequest request = (ApprovalRequest) delegateExecution.getVariable(ApprovalProcessBean.Variables.REQUEST);
+    if (AUTO_STRATEGY_THRESHOLD.compareTo(request.getAmount()) > 0) {
       delegateExecution.setVariable(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_AUTOMATIC);
     } else {
       delegateExecution.setVariable(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL);

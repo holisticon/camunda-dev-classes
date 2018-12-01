@@ -33,7 +33,7 @@ public class LoadDataDelegateTest {
     verify(approvalRequestRepository).findById(approvalRequest.getId());
     verifyNoMoreInteractions(approvalRequestRepository);
 
-    assertThat(execution.getVariable(Variables.AMOUNT)).isNotNull();
-    assertThat(execution.getVariable(Variables.AMOUNT)).isEqualTo(approvalRequest.getAmount());
+    assertThat(execution.getVariable(Variables.REQUEST)).isNotNull();
+    assertThat(execution.getVariable(Variables.REQUEST)).isEqualTo(approvalRequest);
   }
 }
