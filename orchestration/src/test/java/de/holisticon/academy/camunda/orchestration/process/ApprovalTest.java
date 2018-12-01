@@ -13,8 +13,8 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.ini
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 
 @RunWith(ProcessEngineRuleRunner.class)
-@Deployment(resources = "simple-data-processing.bpmn")
-public class SimpleDataProcessingTest {
+@Deployment(resources = "approval.bpmn")
+public class ApprovalTest {
 
 
   @Rule
@@ -31,5 +31,5 @@ public class SimpleDataProcessingTest {
   public void shouldDeploy() {
     // no asserts, deployment would throw exception and fail the test on errors
   }
-  
+
 }
