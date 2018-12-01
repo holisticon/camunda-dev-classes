@@ -3,6 +3,7 @@ package de.holisticon.academy.camunda.orchestration.process;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -63,7 +64,6 @@ public class ApprovalTest {
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81"))));
 
-
     ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
@@ -75,6 +75,25 @@ public class ApprovalTest {
     assertThat(instance).hasPassedInOrder(
       Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.DETERMINE_APPROVAL_STRATEGY, Elements.REQUEST_APPROVED);
   }
+
+  @Test
+  public void shouldStartAndLoadAndApproveAndFail() {
+    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12"))));
+
+    CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
+      .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
+
+    ProcessInstance instance = this.processBean.start("1");
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+
+    execute(job());
+
+    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+  }
+
 
   @Test
   public void shouldStartAndLoadAndManual() {

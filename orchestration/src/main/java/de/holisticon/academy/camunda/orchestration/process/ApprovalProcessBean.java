@@ -57,6 +57,7 @@ public class ApprovalProcessBean {
   enum Expressions {
     ;
 
+    final static String ERROR = "automaticApprovalError";
     final static String AUDIT = "audit";
     final static String LOAD_APPROVAL_REQUEST = "loadApprovalRequestDelegate";
     final static String DETERMINE_APPROVAL_STRATEGY = "determineApprovalStrategyDelegate";
