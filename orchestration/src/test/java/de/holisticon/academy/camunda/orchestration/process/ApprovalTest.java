@@ -1,12 +1,12 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
-import com.google.common.collect.Lists;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.mock.Mocks;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
@@ -18,14 +18,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 @RunWith(ProcessEngineRuleRunner.class)
-@Deployment(resources = { "approval.bpmn", "approvalStrategy.dmn"})
+@Deployment(resources = {"approval.bpmn", "approvalStrategy.dmn"})
 public class ApprovalTest {
 
 
@@ -42,6 +41,7 @@ public class ApprovalTest {
     CamundaMockito.registerJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST);
     CamundaMockito.registerJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST);
 
+    Mocks.register(Expressions.AUDIT, new AuditListener());
   }
 
   @Test

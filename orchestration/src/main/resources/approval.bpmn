@@ -6,6 +6,9 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="approval_requested" targetRef="ExclusiveGateway_1r6peaj" />
     <bpmn:endEvent id="request_approved" name="Request approved">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${audit.log(&#34;Approved&#34;)}" event="start" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0cqdv63</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0ud27qg" sourceRef="service_load_approval_request" targetRef="service_determine_approval_strategy" />
@@ -23,6 +26,9 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalStrategy == "Automatic"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="request_rejected" name="Request rejected">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${audit.log(&#34;Rejected&#34;)}" event="start" />
+      </bpmn:extensionElements>
       <bpmn:incoming>flow_rejected</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="flow_manual" name="Manual" sourceRef="xor_approval_strategy" targetRef="task_approve_request" />
@@ -85,6 +91,9 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1g5mucv" sourceRef="task_amend_request" targetRef="xor_amend_action" />
     <bpmn:endEvent id="request_cancelled" name="Cancelled">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${audit.log(&#34;Cancelled&#34;)}" event="start" />
+      </bpmn:extensionElements>
       <bpmn:incoming>flow_cancelled</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="flow_cancelled" name="no" sourceRef="xor_amend_action" targetRef="request_cancelled">
