@@ -6,8 +6,8 @@ properties properties: [
 
 node {
 
-  env.JAVA_HOME = tool 'JDK 8_171'
-  def mvnHome = tool 'maven_3_latest'
+  env.JAVA_HOME = tool 'jdk-8-oracle'
+  def mvnHome = tool 'maven latest'
   env.PATH = "${env.JAVA_HOME}/bin:${mvnHome}/bin:${env.PATH}"
   def err = null
   def mvnOpts = "-V -U --batch-mode"
