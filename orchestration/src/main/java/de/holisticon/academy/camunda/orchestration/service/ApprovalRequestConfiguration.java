@@ -19,13 +19,11 @@ public class ApprovalRequestConfiguration {
 
   @Bean
   public ApplicationRunner showApprovalRequests() {
-    return new ApplicationRunner() {
-      public void run(ApplicationArguments args) {
-        logger.info("Found {} approvals.", repository.count());
-        repository.findAll().stream().forEach(
-          approval -> logger.info("{}", approval)
-        );
-      }
+    return args -> {
+      logger.info("Found {} approvals.", repository.count());
+      repository.findAll().stream().forEach(
+        approval -> logger.info("{}", approval)
+      );
     };
   }
 }
