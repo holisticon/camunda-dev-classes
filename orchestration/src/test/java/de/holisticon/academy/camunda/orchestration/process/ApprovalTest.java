@@ -9,6 +9,7 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
+import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class ApprovalTest {
 
 
   @Rule
-  public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
+  public final ProcessEngineRule engine = createEngine();
   private ApprovalProcessBean processBean;
 
   @Before
@@ -172,6 +173,12 @@ public class ApprovalTest {
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED));
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+  }
+
+  static ProcessEngineRule createEngine() {
+    StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
+    config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
+    return config.rule();
   }
 
 }
