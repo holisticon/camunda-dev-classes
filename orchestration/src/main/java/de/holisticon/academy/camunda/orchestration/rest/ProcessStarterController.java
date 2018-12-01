@@ -4,6 +4,7 @@ import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +21,8 @@ public class ProcessStarterController {
 
   private final ApprovalProcessBean approvalProcessBean;
 
-  public ProcessStarterController(RuntimeService runtimeService) {
-    this.approvalProcessBean = new ApprovalProcessBean(runtimeService);
+  public ProcessStarterController(RuntimeService runtimeService, TaskService taskService) {
+    this.approvalProcessBean = new ApprovalProcessBean(runtimeService, taskService);
   }
 
   @PostMapping(path = "/approval/{id}")

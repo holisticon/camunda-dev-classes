@@ -16,12 +16,12 @@ public class AutomaticApprovalServiceTest {
   private AutomaticApprovalService service = new AutomaticApprovalService();
 
   @Test
-  public void test_approve() {
+  public void testApprove() {
     assertThat(service.approve(new ApprovalRequest(UUID.randomUUID().toString(), "request", "kermit", new BigDecimal("10")))).isTrue();
   }
 
   @Test
-  public void test_error() {
+  public void testError() {
     thrown.expectMessage("Something bad happened during approval");
     thrown.expect(RuntimeException.class);
 

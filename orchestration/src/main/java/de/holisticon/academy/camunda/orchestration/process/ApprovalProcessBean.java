@@ -1,7 +1,9 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.variable.VariableMap;
 
 /**
  * Encapsulates all API methods around the process and Camunda
@@ -9,15 +11,22 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 public class ApprovalProcessBean {
 
   private final RuntimeService runtimeService;
+  private final TaskService taskService;
 
-  public ApprovalProcessBean(RuntimeService runtimeService) {
+  public ApprovalProcessBean(RuntimeService runtimeService, TaskService taskService) {
     this.runtimeService = runtimeService;
+    this.taskService = taskService;
   }
 
   public ProcessInstance start(String id) {
     return this.runtimeService.startProcessInstanceByKey("approval",
       org.camunda.bpm.engine.variable.Variables.putValue(Variables.APPROVAL_ID, id));
   }
+
+  public void complete(String taskId, VariableMap variables) {
+    this.taskService.complete(taskId, variables);
+  }
+
 
   enum Elements {
     ;
@@ -27,8 +36,9 @@ public class ApprovalProcessBean {
     final static String DETERMINE_APPROVAL_STRATEGY = "service_determine_approval_strategy";
     final static String REQUEST_APPROVED = "request_approved";
     final static String REQUEST_REJECTED = "request_rejected";
-    final static String USER_APPROVE_REQUEST = "user_approve_task";
-    final static String USER_AMEND_REQUEST = "user_amend_task";
+    final static String REQUEST_CANCELLED = "request_cancelled";
+    final static String USER_APPROVE_REQUEST = "task_approve_request";
+    final static String USER_AMEND_REQUEST = "task_amend_request";
   }
 
   public enum Variables {
