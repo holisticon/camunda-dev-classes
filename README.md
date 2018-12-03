@@ -25,6 +25,7 @@ The following branches exist:
     class/10-listeners
     class/11-bpmn-error
     class/12-timer
+    class/13-messages
 
 Please change the branches using:
 
@@ -268,3 +269,36 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 * Add a boundary timer event
 * What about the test?
  * `ClockUtil.setCurrentTime()`
+
+## Class 13: Messages
+
+![img](images/pizzaOrder.png)
+
+### Safe correlation
+
+```java
+Optional
+    .ofNullable(
+        this.runtimeService.createExecutionQuery()
+            .processInstanceBusinessKey(businessKey)
+            .messageEventSubscriptionName(messageName)
+            .singleResult()
+    ).ifPresent(e ->
+        this.runtimeService.createMessageCorrelation(messageName)
+            .processInstanceId(e.getProcessInstanceId())
+            .correlate()
+    );
+
+```
+
+* Start via swagger
+* Checkout the Cockpit
+* Implement the delegate `PlaceOrderDelegate`
+ * set `delivered` to `false`
+ * use correlate message
+ * pass the business key
+ * pass the pizza order: `type`, `size`, `delivered`
+* Implement the delegate `DeliverPizzaDelegate`
+ * set `delivered` to `true`
+ * pass only the `delivered` back
+* Checkout the tests
