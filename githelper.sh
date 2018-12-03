@@ -18,6 +18,7 @@ declare -a BRANCHES=(
     "class/10-listeners"
     "class/11-bpmn-error"
     "class/12-timer"
+    "class/13-messages"
 )
 
 echo "--------------------------------------------------"
