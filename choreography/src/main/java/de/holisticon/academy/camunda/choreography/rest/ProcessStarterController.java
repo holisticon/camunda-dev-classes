@@ -31,9 +31,6 @@ public class ProcessStarterController {
   @ApiOperation(httpMethod = "POST", value = "Starts pizza order process.", response = String.class)
   public ResponseEntity<String> startPizzaOrderProcess() {
 
-    EventSubscription eventSubscription = this.runtimeService.createEventSubscriptionQuery().eventType("message").eventName("foo").singleResult();
-    this.runtimeService.
-
     final ProcessInstance instance = this.runtimeService.startProcessInstanceByKey(
       PizzaOrderProcess.KEY,
       "Pizza-Order-" + UUID.randomUUID().toString(),

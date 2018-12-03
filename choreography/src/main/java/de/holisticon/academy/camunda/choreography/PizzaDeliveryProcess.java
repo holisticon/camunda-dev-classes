@@ -7,7 +7,7 @@ public class PizzaDeliveryProcess {
     public static final String ORDER_PLACED = "order_placed";
   }
 
-  enum Expressions {
+  public enum Expressions {
     ;
     public static final String MESSAGE_PLACE_ORDER = "placeOrder";
     public static final String DELIVER_PIZZA_DELEGATE = "deliverPizzaDelegate";

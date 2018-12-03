@@ -15,14 +15,14 @@ public class PizzaOrderProcess {
     public static final String END_RECEIVED = "pizza_received";
   }
 
-  enum Expressions {
+  public enum Expressions {
     ;
     public static final String PLACE_ORDER_DELEGATE = "placeOrderDelegate";
     public static final String MESSAGE_PIZZA_RECEIVED = "pizzaReceived";
     public static final String AUDIT = "audit";
   }
 
-  enum Variables {
+  public enum Variables {
     ;
     public static final String SIZE = "size";
     public static final String TYPE = "type";
