@@ -4,7 +4,7 @@
 
 To get your first copy, please enter
 
-    git clone https://url
+    git clone https://github.com/holisticon/camunda-dev-classes.git
 
 Every task covered in the workshop is supported by a lab class.
 The branch X contains the solution for the class X. To start, checkout `master` and start with `class 1`
