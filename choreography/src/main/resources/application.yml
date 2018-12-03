@@ -45,6 +45,6 @@ swagger:
       email: bpmsoa@holisticon.de
       url: https://www.holisticon.de
   dockets:
-    orchestration:
+    choreography:
       basePackage: "de.holisticon.academy.camunda.choreography.rest"
       path: "/**"
