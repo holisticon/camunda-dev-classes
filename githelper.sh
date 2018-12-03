@@ -40,8 +40,12 @@ case "$1" in
     COMMAND="git push"
     ;;
 
+  "push-public")
+    echo "Push to publi command detected. will push every."
+    COMMAND="git push public"
+    ;;
   *)
-    echo "No command detected, will just merge branches but let them locally. Try $0 build | push"
+    echo "No command detected, will just merge branches but let them locally. Try $0 build | push | push-public"
     ;;
 esac
 
@@ -51,12 +55,13 @@ do
     PREVIOUS="${BRANCHES[i-1]}"
     CURRENT="${BRANCHES[i]}"
 
+    echo "-----"
     echo "Checking out $CURRENT"
     git checkout $CURRENT
     echo "Merging changes from $PREVIOUS"
     git merge $PREVIOUS --no-edit
 
-    echo "Executing command"
+    echo "Executing command $COMMAND"
     `$COMMAND`
 done
 
