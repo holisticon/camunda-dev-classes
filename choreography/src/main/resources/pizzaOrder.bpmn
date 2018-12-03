@@ -4,38 +4,44 @@
     <bpmn:participant id="Participant_14ejuqd" name="Pizza order" processRef="pizza_order" />
     <bpmn:participant id="Participant_1mvcl63" name="Pizza delivery" processRef="pizza_delivery" />
     <bpmn:messageFlow id="MessageFlow_06zvwx2" sourceRef="task_place_order" targetRef="order_placed" />
-    <bpmn:messageFlow id="MessageFlow_03uu66z" sourceRef="Task_1vw7nqp" targetRef="message_event_pizza_received" />
+    <bpmn:messageFlow id="MessageFlow_03uu66z" sourceRef="task_deliver_pizza" targetRef="message_event_pizza_received" />
   </bpmn:collaboration>
   <bpmn:process id="pizza_order" name="Pizza order" isExecutable="true">
-    <bpmn:startEvent id="food_needed" name="Food needed">
+    <bpmn:startEvent id="food_needed" name="Food needed" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_0u2axqi</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0u2axqi" sourceRef="food_needed" targetRef="task_place_order" />
-    <bpmn:sequenceFlow id="SequenceFlow_11fsip4" sourceRef="task_place_order" targetRef="ExclusiveGateway_1e8w9pl" />
-    <bpmn:eventBasedGateway id="ExclusiveGateway_1e8w9pl">
+    <bpmn:sequenceFlow id="SequenceFlow_11fsip4" sourceRef="task_place_order" targetRef="data_exclusive" />
+    <bpmn:eventBasedGateway id="data_exclusive">
       <bpmn:incoming>SequenceFlow_11fsip4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_04o80rh</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_08q4a21</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_06llyhu" name="1h">
+    <bpmn:intermediateCatchEvent id="timer" name="1h">
       <bpmn:incoming>SequenceFlow_04o80rh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03xds2k</bpmn:outgoing>
       <bpmn:timerEventDefinition>
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P1H</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1H</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_04o80rh" sourceRef="ExclusiveGateway_1e8w9pl" targetRef="IntermediateCatchEvent_06llyhu" />
+    <bpmn:sequenceFlow id="SequenceFlow_04o80rh" sourceRef="data_exclusive" targetRef="timer" />
     <bpmn:endEvent id="pizza_not_received" name="Pizza not received">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${audit.log(&#34;timeout&#34;)}" event="end" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_03xds2k</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_03xds2k" sourceRef="IntermediateCatchEvent_06llyhu" targetRef="pizza_not_received" />
+    <bpmn:sequenceFlow id="SequenceFlow_03xds2k" sourceRef="timer" targetRef="pizza_not_received" />
     <bpmn:intermediateCatchEvent id="message_event_pizza_received" name="Receive pizza">
       <bpmn:incoming>SequenceFlow_08q4a21</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1qdoxbq</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0b5uqs9" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_08q4a21" sourceRef="ExclusiveGateway_1e8w9pl" targetRef="message_event_pizza_received" />
+    <bpmn:sequenceFlow id="SequenceFlow_08q4a21" sourceRef="data_exclusive" targetRef="message_event_pizza_received" />
     <bpmn:endEvent id="pizza_received" name="Pizza received">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${audit.log(&#34;order delivered: &#34;, execution.getVariable(&#34;delivered&#34;))}" event="end" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1qdoxbq</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1qdoxbq" sourceRef="message_event_pizza_received" targetRef="pizza_received" />
@@ -45,17 +51,17 @@
     </bpmn:sendTask>
   </bpmn:process>
   <bpmn:process id="pizza_delivery" name="Pizza delivery" isExecutable="true">
-    <bpmn:startEvent id="order_placed" name="Order placed">
+    <bpmn:startEvent id="order_placed" name="Order placed" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_000bhhh</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_11le573" />
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_000bhhh" sourceRef="order_placed" targetRef="task_make_pizza" />
-    <bpmn:sequenceFlow id="SequenceFlow_1lvwny4" sourceRef="task_make_pizza" targetRef="Task_1vw7nqp" />
+    <bpmn:sequenceFlow id="SequenceFlow_1lvwny4" sourceRef="task_make_pizza" targetRef="task_deliver_pizza" />
     <bpmn:endEvent id="pizza_delivered" name="Pizza delivered">
       <bpmn:incoming>SequenceFlow_194w8qg</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_194w8qg" sourceRef="Task_1vw7nqp" targetRef="pizza_delivered" />
-    <bpmn:sendTask id="Task_1vw7nqp" name="Deliver pizza" camunda:delegateExpression="${deliverPizzaDelegate}">
+    <bpmn:sequenceFlow id="SequenceFlow_194w8qg" sourceRef="task_deliver_pizza" targetRef="pizza_delivered" />
+    <bpmn:sendTask id="task_deliver_pizza" name="Deliver pizza" camunda:delegateExpression="${deliverPizzaDelegate}">
       <bpmn:incoming>SequenceFlow_1lvwny4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_194w8qg</bpmn:outgoing>
     </bpmn:sendTask>
@@ -85,10 +91,10 @@
         <di:waypoint x="360" y="231" />
         <di:waypoint x="391" y="231" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EventBasedGateway_0u4mip1_di" bpmnElement="ExclusiveGateway_1e8w9pl">
+      <bpmndi:BPMNShape id="EventBasedGateway_0u4mip1_di" bpmnElement="data_exclusive">
         <dc:Bounds x="391" y="206" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="IntermediateCatchEvent_06llyhu_di" bpmnElement="IntermediateCatchEvent_06llyhu">
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_06llyhu_di" bpmnElement="timer">
         <dc:Bounds x="477" y="136" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="489" y="179" width="13" height="14" />
@@ -170,7 +176,7 @@
         <di:waypoint x="545" y="601" />
         <di:waypoint x="595" y="601" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="SendTask_1j4rpp2_di" bpmnElement="Task_1vw7nqp">
+      <bpmndi:BPMNShape id="SendTask_1j4rpp2_di" bpmnElement="task_deliver_pizza">
         <dc:Bounds x="445" y="561" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_01yshkk_di" bpmnElement="task_make_pizza">
