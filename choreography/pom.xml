@@ -63,6 +63,11 @@
   <profiles>
     <profile>
       <id>camunda-ce</id>
+      <activation>
+        <property>
+          <name>!camunda-ee</name>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>org.camunda.bpm.springboot</groupId>
@@ -73,6 +78,11 @@
     </profile>
     <profile>
       <id>camunda-ee</id>
+      <activation>
+        <property>
+          <name>camunda-ee</name>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>org.camunda.bpm.springboot</groupId>
