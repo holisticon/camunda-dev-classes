@@ -197,6 +197,7 @@ public class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED));
+    execute(job());
 
 
     Calendar time = Calendar.getInstance();
