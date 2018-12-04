@@ -62,7 +62,7 @@ public class ApprovalProcessBean {
 
   public boolean isValidAmendAction(String amendAction) {
     return amendAction.equals(ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED)
-      || amendAction.equals(ApprovalProcessBean.Values.AMEND_ACTION_CANCELED);
+      || amendAction.equals(ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED);
   }
 
   enum Elements {
@@ -73,7 +73,7 @@ public class ApprovalProcessBean {
     final static String DETERMINE_APPROVAL_STRATEGY = "service_determine_approval_strategy";
     final static String REQUEST_APPROVED = "request_approved";
     final static String REQUEST_REJECTED = "request_rejected";
-    final static String REQUEST_CANCELED = "request_canceled";
+    final static String REQUEST_CANCELLED = "request_cancelled";
     final static String USER_APPROVE_REQUEST = "task_approve_request";
     final static String USER_AMEND_REQUEST = "task_amend_request";
   }
@@ -109,7 +109,7 @@ public class ApprovalProcessBean {
     public final static String APPROVAL_DECISION_REJECTED = "REJECTED";
     public final static String APPROVAL_DECISION_RETURNED = "RETURNED";
 
-    public final static String AMEND_ACTION_CANCELED = "CANCELED";
+    public final static String AMEND_ACTION_CANCELLED = "CANCELLED";
     public final static String AMEND_ACTION_RESUBMITTED = "RESUBMITTED";
 
   }
