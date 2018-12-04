@@ -3,7 +3,11 @@ package de.holisticon.academy.camunda.orchestration.process;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.variable.VariableMap;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Encapsulates all API methods around the process and Camunda
@@ -27,6 +31,39 @@ public class ApprovalProcessBean {
     this.taskService.complete(taskId, variables);
   }
 
+  Optional<Task> task(String taskDefinitionKey, String taskId) {
+    return Optional.ofNullable(taskService
+      .createTaskQuery()
+      .taskDefinitionKey(taskDefinitionKey)
+      .taskId(taskId)
+      .singleResult());
+  }
+
+  public Optional<Task> approveTask(String taskId) {
+    return task(Elements.USER_APPROVE_REQUEST, taskId);
+  }
+
+  public Optional<Task> amendTask(String taskId) {
+    return task(Elements.USER_AMEND_REQUEST, taskId);
+  }
+
+  public List<Task> getTasks() {
+    return taskService
+      .createTaskQuery()
+      .initializeFormKeys()
+      .list();
+  }
+
+  public boolean isValidApprovalDecision(String approvalDecision) {
+    return approvalDecision.equals(Values.APPROVAL_DECISION_REJECTED)
+      || approvalDecision.equals(Values.APPROVAL_DECISION_APPROVED)
+      || approvalDecision.equals(Values.APPROVAL_DECISION_RETURNED);
+  }
+
+  public boolean isValidAmendAction(String amendAction) {
+    return amendAction.equals(ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED)
+      || amendAction.equals(ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED);
+  }
 
   enum Elements {
     ;
