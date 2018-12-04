@@ -106,6 +106,7 @@ public class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED));
+    execute(job());
 
     assertThat(instance).isEnded();
     assertThat(instance).hasPassedInOrder(
@@ -127,6 +128,7 @@ public class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED));
+    execute(job());
 
     assertThat(instance).isEnded();
     assertThat(instance).hasPassedInOrder(
@@ -148,10 +150,11 @@ public class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED));
-
+    execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_AMEND_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED));
+    execute(job());
 
     assertThat(instance).isEnded();
     assertThat(instance).hasPassedInOrder(
@@ -173,10 +176,11 @@ public class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED));
-
+    execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_AMEND_REQUEST);
     this.processBean.complete(task().getId(), Variables.putValue(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED));
+    execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }

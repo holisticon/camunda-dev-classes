@@ -38,7 +38,7 @@
       <bpmn:outgoing>SequenceFlow_06pxplx</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_06viepv" sourceRef="task_approve_request" targetRef="xor_approval_decision" />
-    <bpmn:userTask id="task_approve_request" name="Approve&#10;request">
+    <bpmn:userTask id="task_approve_request" name="Approve&#10;request" camunda:asyncAfter="true">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="approvalDecision" label="Approve decision" type="enum">
@@ -72,7 +72,7 @@
     <bpmn:sequenceFlow id="flow_returned" name="Returned to originator" sourceRef="xor_approval_decision" targetRef="task_amend_request">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalDecision == 'RETURNED'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="task_amend_request" name="Amend&#10;request">
+    <bpmn:userTask id="task_amend_request" name="Amend&#10;request" camunda:asyncAfter="true">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="amendAction" label="Amend decision" type="enum">
