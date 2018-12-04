@@ -37,7 +37,7 @@ case "$1" in
     ;;
   "push")
     echo "Push command detected, will push every branch"
-    COMMAND="git push"
+    COMMAND="git push origin"
     ;;
 
   "push-public")
