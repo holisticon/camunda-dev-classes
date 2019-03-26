@@ -26,7 +26,7 @@
     <mockito.version>2.18.3</mockito.version>
     <springboot.version>2.0.3.RELEASE</springboot.version>
     <version.camunda.spin>1.5.1</version.camunda.spin>
-    <jackson.version>2.9.5</jackson.version>
+    <jackson.version>[2.9.8,)</jackson.version>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
   </properties>
 
