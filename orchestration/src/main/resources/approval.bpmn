@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1oa9vab" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1oa9vab" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
   <bpmn:process id="approval" name="Approval" isExecutable="true">
     <bpmn:startEvent id="approval_requested" name="Approval requested" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_1ybc6go</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="approval_requested" targetRef="service_load_approval_request" />
     <bpmn:endEvent id="request_approved" name="Request approved">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${loggingListener}" event="end" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0uueyax</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0ud27qg" sourceRef="service_load_approval_request" targetRef="service_determine_approval_strategy" />
@@ -27,6 +30,9 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvalStrategy == "Automatic"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="request_rejected" name="Request rejected">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${loggingListener}" event="end" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0a7rh72</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0a7rh72" name="else" sourceRef="ExclusiveGateway_01u5t10" targetRef="request_rejected" />
