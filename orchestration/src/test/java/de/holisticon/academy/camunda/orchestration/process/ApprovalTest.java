@@ -36,6 +36,7 @@ public class ApprovalTest {
     CamundaMockito.registerJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY);
     CamundaMockito.registerJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST);
     CamundaMockito.registerJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST);
+    CamundaMockito.registerInstance(new LoggingListener());
 
   }
 
