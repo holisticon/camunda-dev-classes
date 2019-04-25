@@ -38,6 +38,7 @@ public class ApprovalTest {
     init(engine.getProcessEngine());
 
     CamundaMockito.registerJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY);
+    CamundaMockito.registerInstance(new LoggingListener());
 
     Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate(mock(ApprovalRequestRepository.class)));
   }
