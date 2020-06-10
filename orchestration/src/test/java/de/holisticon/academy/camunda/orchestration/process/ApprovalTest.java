@@ -13,10 +13,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.mockito.Mockito.mock;
@@ -26,14 +25,14 @@ import static org.mockito.Mockito.mock;
 public class ApprovalTest {
 
 
-  @Rule
-  public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-  private ApprovalProcessBean processBean;
+    @Rule
+    public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
+    private ApprovalProcessBean processBean;
 
-  @Before
-  public void before() {
-    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
-    init(engine.getProcessEngine());
+    @Before
+    public void before() {
+        this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
+        init(engine.getProcessEngine());
 
     Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate(mock(ApprovalRequestRepository.class)));
   }
