@@ -39,13 +39,16 @@ case "$1" in
     echo "Push command detected, will push every branch"
     COMMAND="git push origin"
     ;;
-
+  "pull")
+    echo "Pull command detected, will pull every branch"
+    COMMAND="git pull origin"
+    ;;
   "push-public")
     echo "Push to publi command detected. will push every."
     COMMAND="git push public"
     ;;
   *)
-    echo "No command detected, will just merge branches but let them locally. Try $0 build | push | push-public"
+    echo "No command detected, will just merge branches but let them locally. Try $0 build | pull | push | push-public"
     ;;
 esac
 
@@ -58,7 +61,7 @@ do
     echo "-----"
     echo "Checking out $CURRENT"
     git checkout $CURRENT
-    echo "Merging changes from $PREVIOUS"
+    echo "Merging changes from $PREVIOUS branch to $CURRENT"
     git merge $PREVIOUS --no-edit
 
     echo "Executing command $COMMAND"
