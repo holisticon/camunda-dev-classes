@@ -8,6 +8,9 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component(value = "placeOrderDelegate")
 public class PlaceOrderDelegate implements JavaDelegate {
 

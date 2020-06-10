@@ -81,7 +81,8 @@ public class ApprovalTest {
   @Test
   public void shouldStartAndLoadAndApproveAndFail() {
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12"))));
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST,
+        new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12"))));
 
     CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
       .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
@@ -94,6 +95,9 @@ public class ApprovalTest {
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+
+    CamundaMockito.verifyJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST).executed();
+    CamundaMockito.verifyJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST).executed();
   }
 
 

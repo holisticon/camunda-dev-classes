@@ -1,11 +1,15 @@
 package de.holisticon.academy.camunda.choreography;
 
+import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
+import org.camunda.bpm.model.bpmn.Bpmn;
+import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.builder.EndEventBuilder;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.Before;
@@ -16,8 +20,7 @@ import java.util.UUID;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 @Deployment(resources = {"pizzaOrder.bpmn"})
 public class PizzaDeliveryProcessTest {
@@ -36,6 +39,7 @@ public class PizzaDeliveryProcessTest {
 
     this.orderId = "Pizza-Order-" + UUID.randomUUID().toString();
     this.payload = PizzaOrderProcess.createOrder();
+
   }
 
   @Test
@@ -45,7 +49,6 @@ public class PizzaDeliveryProcessTest {
 
   @Test
   public void shouldStartEnd() {
-
 
     this.engine.getRuntimeService().correlateMessage(
       PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
