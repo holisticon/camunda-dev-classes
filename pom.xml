@@ -23,7 +23,6 @@
     <camunda-commons.version>1.9.0</camunda-commons.version>
     <camunda-springboot.version>3.4.1</camunda-springboot.version>
 
-    <mockito.version>2.18.3</mockito.version>
     <springboot.version>2.2.7.RELEASE</springboot.version>
     <version.camunda.spin>1.9.0</version.camunda.spin>
     <jackson.version>2.10.0</jackson.version>
@@ -91,31 +90,14 @@
         <version>0.0.4</version>
       </dependency>
 
+      <!-- Camunda Data -->
+      <dependency>
+        <groupId>io.holunda.data</groupId>
+        <artifactId>camunda-bpm-data</artifactId>
+        <version>0.0.6</version>
+      </dependency>
+
       <!-- Testing -->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-inline</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>3.9.0</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>org.camunda.bpm.springboot</groupId>
         <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
@@ -125,15 +107,12 @@
       <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
-        <version>4.0.0</version>
+        <version>4.12.0</version>
         <scope>test</scope>
       </dependency>
 
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-  </dependencies>
 
   <build>
     <defaultGoal>clean jacoco:prepare-agent package</defaultGoal>
