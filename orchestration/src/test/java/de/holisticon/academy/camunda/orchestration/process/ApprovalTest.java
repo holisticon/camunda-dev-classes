@@ -14,54 +14,52 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 @RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = "approval.bpmn")
 public class ApprovalTest {
 
 
-  @Rule
-  public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-  private ApprovalProcessBean processBean;
+    @Rule
+    public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
+    private ApprovalProcessBean processBean;
 
-  @Before
-  public void before() {
-    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
-    init(engine.getProcessEngine());
+    @Before
+    public void before() {
+        this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
+        init(engine.getProcessEngine());
 
-    Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate());
-  }
+        Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate());
+    }
 
-  @Test
-  public void shouldDeploy() {
-    // no asserts, deployment would throw exception and fail the test on errors
-  }
+    @Test
+    public void shouldDeploy() {
+        // no asserts, deployment would throw exception and fail the test on errors
+    }
 
-  @Test
-  public void shouldStartWaitInApprovalRequested() {
-    ProcessInstance instance = this.processBean.start();
+    @Test
+    public void shouldStartWaitInApprovalRequested() {
+        ProcessInstance instance = this.processBean.start();
 
-    assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
-  }
+        assertThat(instance).isNotNull();
+        assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+    }
 
 
-  @Test
-  public void shouldStartAndLoadAndComplete() {
-    ProcessInstance instance = this.processBean.start();
+    @Test
+    public void shouldStartAndLoadAndComplete() {
+        ProcessInstance instance = this.processBean.start();
 
-    assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+        assertThat(instance).isNotNull();
+        assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
 
-    execute(job());
+        execute(job());
 
-    assertThat(instance).isEnded();
-    assertThat(instance).hasPassedInOrder(
-      Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
+        assertThat(instance).isEnded();
+        assertThat(instance).hasPassedInOrder(
+            Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
 
-  }
+    }
 
 }
