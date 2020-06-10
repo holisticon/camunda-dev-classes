@@ -30,11 +30,11 @@ The following branches exist:
 Please change the branches using:
 
     git stash
-
+    
     # or to keep yours
     git add --all
     git commit -m "my solution"
-
+    
     # then
     git checkout class/<class-name>
 
@@ -55,7 +55,11 @@ In order to run the project, please enter
 
 ## Class 1: Model, start, fail
 
+In this class you will create a trivial process model in BPMN that is executed by the Camunda engine. If this process is started, the id of approval request is provided as a process variable `approvalId`. The process should load the approval for the provided id using a service task. Here is the resulting process model:
+
 ![class 1](images/class1/approval.png)
+
+To complete this class, execute the following steps:
 
 * Create a process model
   * Put it into (`src/main/resources/approval.bpmn`)
@@ -69,7 +73,7 @@ In order to run the project, please enter
 * Start process using Swagger-UI
 * Inspect in Cockpit (login: admin/admin)
 
-> All ids in process model are using **Snake Case**<br>
+> All ids in process model are using **Snake Case**
 > All references to code are using **Camel case**
 
 > NOTES:
@@ -77,10 +81,14 @@ In order to run the project, please enter
 > * Why does it happen?
 > * Why async after?
 
-
 ## Class 2: Java Delegate
 
+In the previous class, you referenced a bean from a service task. In this task, you will provide the implementation of this bean implemeenting a Java Delegate.
+
+To complete this class, execute the following steps:
+
 * Create a Spring Component
+* Call it `LoadApprovalRequestDelegate`
 * Implement `JavaDelegate` interface
 * Start process using Swagger-UI
 
@@ -106,6 +114,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ```
 
 > NOTES:
+>
 > * See console for log
 
 ## Class 3: Test it!
@@ -130,6 +139,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
   }
 ```
 > NOTES:
+>
 > * Look on the empty test method
 
 ## Class 4: Test it to the end
@@ -161,6 +171,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
   }
 ```
 > NOTES:
+>
 > * Try without mock first and see what happens!
 
 ## Class 5: Delegate testing
@@ -191,6 +202,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
   * Use `onExecutionSetVariables(...)`
 
 > NOTES:
+>
 > * No delegate classes needed to run the process test!
 
 ## Class 7: User tasks
