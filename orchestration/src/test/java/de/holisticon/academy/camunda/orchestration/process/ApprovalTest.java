@@ -10,26 +10,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 
 @RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = "approval.bpmn")
 public class ApprovalTest {
 
 
-  @Rule
-  public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-  private ApprovalProcessBean processBean;
+    @Rule
+    public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
+    private ApprovalProcessBean processBean;
 
-  @Before
-  public void before() {
-    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
-    init(engine.getProcessEngine());
-  }
+    @Before
+    public void before() {
+        this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
+        init(engine.getProcessEngine());
+    }
 
-  @Test
-  public void shouldDeploy() {
-    // no asserts, deployment would throw exception and fail the test on errors
-  }
+    @Test
+    public void shouldDeploy() {
+        // no asserts, deployment would throw exception and fail the test on errors
+    }
 
 }
