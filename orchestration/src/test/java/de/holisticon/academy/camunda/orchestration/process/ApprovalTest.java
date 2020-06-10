@@ -1,9 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
-import com.google.common.collect.Lists;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
-import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -17,15 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 @RunWith(ProcessEngineRuleRunner.class)
-@Deployment(resources = { "approval.bpmn", "approvalStrategy.dmn"})
+@Deployment(resources = "approval.bpmn")
 public class ApprovalTest {
 
 
@@ -60,9 +55,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndApprove() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81"))));
-
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_AUTOMATIC));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -78,8 +72,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndManual() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -94,8 +88,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndManualAndApprove() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -116,8 +110,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndManualAndReject() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -138,8 +132,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndManualAndReturnedAndCancel() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -164,8 +158,8 @@ public class ApprovalTest {
 
   @Test
   public void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+    CamundaMockito.getJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_STRATEGY, ApprovalProcessBean.Values.APPROVAL_STRATEGY_MANUAL));
 
     ProcessInstance instance = this.processBean.start("1");
 
