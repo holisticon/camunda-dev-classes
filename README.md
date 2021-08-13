@@ -51,6 +51,11 @@ In order to run the project, please enter
 
     ./mvnw spring-boot:run
 
+### Camunda URLs
+
+* Cockpit: http://localhost:8080/camunda/app/cockpit/default/
+* Tasklist: http://localhost:8080/camunda/app/tasklist/default/
+
 # Lab classes
 
 ## Class 1: Model, start, fail
