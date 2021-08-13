@@ -1,15 +1,11 @@
 package de.holisticon.academy.camunda.choreography;
 
-import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
-import org.camunda.bpm.model.bpmn.Bpmn;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.builder.EndEventBuilder;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.Before;
@@ -20,7 +16,9 @@ import java.util.UUID;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
 @Deployment(resources = {"pizzaOrder.bpmn"})
@@ -62,6 +60,14 @@ public class PizzaDeliveryProcessTest {
 
     // async on start
     assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
+    execute(job());
+
+    // process is waiting for the external task to be completed
+    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
+    complete(externalTask());
+
+    // The external task ist asyncAfter, so we need to execute that job
+    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
     execute(job());
 
     assertThat(deliveryInstance).isEnded();
