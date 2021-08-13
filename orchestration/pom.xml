@@ -27,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
+      <artifactId>groovy</artifactId>
     </dependency>
     <dependency>
       <groupId>io.toolisticon.springboot</groupId>
@@ -48,7 +48,7 @@
         <dependency>
           <groupId>org.camunda.bpm.springboot</groupId>
           <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-          <version>${camunda-springboot.version}</version>
+          <version>${camunda.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -63,7 +63,7 @@
         <dependency>
           <groupId>org.camunda.bpm.springboot</groupId>
           <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-          <version>${camunda-springboot.version}</version>
+          <version>${camunda.version}</version>
         </dependency>
       </dependencies>
     </profile>
