@@ -1,6 +1,7 @@
 package de.holisticon.academy.camunda.choreography;
 
 import de.holisticon.academy.camunda.choreography.listener.AuditListener;
+import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -19,7 +20,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
@@ -82,7 +83,7 @@ public class PizzaOrderProcessTest {
       PizzaOrderProcess.Elements.END_NOT_RECEIVED
     );
 
-    assertThat(auditListener.getLastMessage()).isEqualTo("timeout");
+    Assertions.assertThat(auditListener.getLastMessage()).isEqualTo("timeout");
   }
 
   @Test
@@ -113,7 +114,7 @@ public class PizzaOrderProcessTest {
     );
     // correlated variable
     assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, true);
-    assertThat(auditListener.getLastMessage()).isEqualTo("order delivered: true");
+    Assertions.assertThat(auditListener.getLastMessage()).isEqualTo("order delivered: true");
   }
 
 
