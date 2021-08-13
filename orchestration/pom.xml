@@ -42,14 +42,12 @@
     <dependency>
       <groupId>org.camunda.bpm.assert</groupId>
       <artifactId>camunda-bpm-assert</artifactId>
-      <version>6.0.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.camunda.bpm.extension.mockito</groupId>
       <artifactId>camunda-bpm-mockito</artifactId>
-      <version>4.0.0</version>
     </dependency>
 
   </dependencies>
