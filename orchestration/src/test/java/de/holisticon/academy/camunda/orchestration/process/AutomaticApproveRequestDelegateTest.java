@@ -3,6 +3,7 @@ package de.holisticon.academy.camunda.orchestration.process;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import de.holisticon.academy.camunda.orchestration.service.AutomaticApprovalService;
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,8 +28,11 @@ public class AutomaticApproveRequestDelegateTest {
     final ApprovalRequest approvalRequest = new ApprovalRequest("1", "Salary increase", "kermit", BigDecimal.valueOf(10L));
     when(approvalRequestRepository.findById(any())).thenReturn(Optional.of(approvalRequest));
     when(approvalService.approve(any())).thenReturn(true);
-    DelegateExecutionFake execution = new DelegateExecutionFake()
-      .withVariable(ApprovalProcessBean.Variables.APPROVAL_ID, approvalRequest.getId());
+    DelegateExecutionFake execution = new DelegateExecutionFake().withVariables(
+      CamundaBpmData.builder()
+        .set(ApprovalProcessBean.Variables.APPROVAL_ID, approvalRequest.getId())
+        .build()
+    );
 
     delegate.execute(execution);
 
@@ -36,8 +40,9 @@ public class AutomaticApproveRequestDelegateTest {
     verifyNoMoreInteractions(approvalRequestRepository);
     verify(approvalService).approve(approvalRequest);
 
-    assertThat(execution.getVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isNotNull();
-    assertThat(execution.getVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isEqualTo(ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED);
+    final var reader = CamundaBpmData.reader(execution);
+    assertThat(reader.get(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isNotNull();
+    assertThat(reader.get(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isEqualTo(ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED);
   }
 
   @Test
@@ -46,8 +51,11 @@ public class AutomaticApproveRequestDelegateTest {
     final ApprovalRequest approvalRequest = new ApprovalRequest("1", "Salary increase", "kermit", BigDecimal.valueOf(10L));
     when(approvalRequestRepository.findById(any())).thenReturn(Optional.of(approvalRequest));
     when(approvalService.approve(any())).thenReturn(false);
-    DelegateExecutionFake execution = new DelegateExecutionFake()
-      .withVariable(ApprovalProcessBean.Variables.APPROVAL_ID, approvalRequest.getId());
+    DelegateExecutionFake execution = new DelegateExecutionFake().withVariables(
+      CamundaBpmData.builder()
+        .set(ApprovalProcessBean.Variables.APPROVAL_ID, approvalRequest.getId())
+        .build()
+    );
 
     delegate.execute(execution);
 
@@ -55,8 +63,9 @@ public class AutomaticApproveRequestDelegateTest {
     verifyNoMoreInteractions(approvalRequestRepository);
     verify(approvalService).approve(approvalRequest);
 
-    assertThat(execution.getVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isNotNull();
-    assertThat(execution.getVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isEqualTo(ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED);
+    final var reader = CamundaBpmData.reader(execution);
+    assertThat(reader.get(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isNotNull();
+    assertThat(reader.get(ApprovalProcessBean.Variables.APPROVAL_DECISION)).isEqualTo(ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED);
 
   }
 

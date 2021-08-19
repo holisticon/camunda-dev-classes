@@ -1,6 +1,10 @@
 package de.holisticon.academy.camunda.choreography;
 
+import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.factory.VariableFactory;
 import org.camunda.bpm.engine.variable.VariableMap;
+
+import static io.holunda.camunda.bpm.data.CamundaBpmData.*;
 
 public class PizzaOrderProcess {
   public static final String KEY = "pizza_order";
@@ -24,15 +28,16 @@ public class PizzaOrderProcess {
 
   public enum Variables {
     ;
-    public static final String SIZE = "size";
-    public static final String TYPE = "type";
-    public static final String DELIVERED = "delivered";
+    public static final VariableFactory<String> SIZE = stringVariable("size");
+    public static final VariableFactory<String> TYPE = stringVariable("type");
+    public static final VariableFactory<Boolean> DELIVERED = booleanVariable("delivered");
   }
 
   public static VariableMap createOrder() {
-    return org.camunda.bpm.engine.variable.Variables
-      .putValue(Variables.TYPE, "Funghi")
-      .putValue(Variables.SIZE, "medium")
-      .putValue(Variables.DELIVERED, false);
+    return CamundaBpmData.builder()
+      .set(Variables.TYPE, "Funghi")
+      .set(Variables.SIZE, "medium")
+      .set(Variables.DELIVERED, false)
+      .build();
   }
 }

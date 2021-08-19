@@ -1,5 +1,8 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
+import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
+import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.factory.VariableFactory;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.task.Task;
@@ -7,6 +10,9 @@ import org.camunda.bpm.engine.variable.VariableMap;
 
 import java.util.List;
 import java.util.Optional;
+
+import static io.holunda.camunda.bpm.data.CamundaBpmData.*;
+import static io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable;
 
 /**
  * Encapsulates all API methods around the process and Camunda
@@ -22,8 +28,13 @@ public class ApprovalProcessBean {
   }
 
   public ApprovalProcessInstance start(String id) {
-    return ApprovalProcessInstance.wrap(this.runtimeService.startProcessInstanceByKey("approval",
-      org.camunda.bpm.engine.variable.Variables.putValue(Variables.APPROVAL_ID, id)));
+    return ApprovalProcessInstance.wrap(
+      this.runtimeService.startProcessInstanceByKey(
+        "approval",
+        CamundaBpmData.builder()
+          .set(Variables.APPROVAL_ID, id)
+          .build())
+    );
   }
 
   public void complete(String taskId, VariableMap variables) {
@@ -81,13 +92,13 @@ public class ApprovalProcessBean {
     ;
 
     // variables goes here
-    final static String APPROVAL_ID = "approvalId";
-    final static String AMOUNT = "amount";
-    final static String REQUEST = "request";
-    final static String APPROVAL_STRATEGY = "approvalStrategy";
+    final static VariableFactory<String> APPROVAL_ID = stringVariable("approvalId");
+    final static VariableFactory<String> AMOUNT = stringVariable("amount");
+    final static VariableFactory<ApprovalRequest> REQUEST = customVariable("request", ApprovalRequest.class);
+    final static VariableFactory<String> APPROVAL_STRATEGY = stringVariable("approvalStrategy");
 
-    public final static String APPROVAL_DECISION = "approvalDecision";
-    public final static String AMEND_ACTION = "amendAction";
+    public final static VariableFactory<String> APPROVAL_DECISION = stringVariable("approvalDecision");
+    public final static VariableFactory<String> AMEND_ACTION = stringVariable("amendAction");
   }
 
   enum Expressions {

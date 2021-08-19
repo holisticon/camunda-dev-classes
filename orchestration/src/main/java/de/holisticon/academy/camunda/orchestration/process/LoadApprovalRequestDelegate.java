@@ -22,10 +22,10 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
   }
 
   public void execute(DelegateExecution execution) {
-    String id = (String) execution.getVariable(Variables.APPROVAL_ID);
+    final var id = Variables.APPROVAL_ID.from(execution).get();
 
     approvalRequestRepository.findById(id).ifPresent(approvalRequest -> {
-      execution.setVariable(Variables.REQUEST, approvalRequest);
+      Variables.REQUEST.on(execution).set(approvalRequest);
       logger.info("Setting request {} as variable", approvalRequest);
     });
   }

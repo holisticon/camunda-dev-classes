@@ -1,6 +1,7 @@
 package de.holisticon.academy.camunda.choreography.delegate;
 
 import de.holisticon.academy.camunda.choreography.PizzaOrderProcess;
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -26,10 +27,10 @@ public class DeliverPizzaDelegate implements JavaDelegate {
           .messageEventSubscriptionName(PizzaOrderProcess.Expressions.MESSAGE_PIZZA_RECEIVED)
           .singleResult()
       ).ifPresent(e ->
-      this.runtimeService.createMessageCorrelation(PizzaOrderProcess.Expressions.MESSAGE_PIZZA_RECEIVED)
-        .processInstanceId(e.getProcessInstanceId())
-        .setVariable(PizzaOrderProcess.Variables.DELIVERED, true)
-        .correlate()
-    );
+        this.runtimeService.createMessageCorrelation(PizzaOrderProcess.Expressions.MESSAGE_PIZZA_RECEIVED)
+          .processInstanceId(e.getProcessInstanceId())
+          .setVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build())
+          .correlate()
+      );
   }
 }

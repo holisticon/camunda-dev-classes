@@ -1,6 +1,7 @@
 package de.holisticon.academy.camunda.choreography;
 
 import de.holisticon.academy.camunda.choreography.listener.AuditListener;
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -66,7 +67,7 @@ public class PizzaOrderProcessTest {
     assertThat(orderInstance).isStarted();
     execute(job()); // async on start
     assertThat(orderInstance).isWaitingAt(PizzaOrderProcess.Elements.DATA_EXCLUSIVE);
-    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, false);
+    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), false);
 
     // timeout the timer
     final Calendar now = Calendar.getInstance();
@@ -93,15 +94,15 @@ public class PizzaOrderProcessTest {
     assertThat(orderInstance).isStarted();
     execute(job()); // async on start
     assertThat(orderInstance).isWaitingAt(PizzaOrderProcess.Elements.DATA_EXCLUSIVE);
-    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, false);
+    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), false);
 
     // correlate message
     engine.getRuntimeService().correlateMessage(
       PizzaOrderProcess.Expressions.MESSAGE_PIZZA_RECEIVED,
       orderId,
-      Variables.putValue(
-        PizzaOrderProcess.Variables.DELIVERED, true
-      )
+      CamundaBpmData.builder()
+        .set(PizzaOrderProcess.Variables.DELIVERED, true)
+        .build()
     );
 
     // assert the correct end
@@ -113,7 +114,7 @@ public class PizzaOrderProcessTest {
       PizzaOrderProcess.Elements.END_RECEIVED
     );
     // correlated variable
-    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, true);
+    assertThat(orderInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
     Assertions.assertThat(auditListener.getLastMessage()).isEqualTo("order delivered: true");
   }
 

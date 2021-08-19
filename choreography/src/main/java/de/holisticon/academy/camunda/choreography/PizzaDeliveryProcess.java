@@ -1,5 +1,10 @@
 package de.holisticon.academy.camunda.choreography;
 
+import io.holunda.camunda.bpm.data.factory.VariableFactory;
+
+import static io.holunda.camunda.bpm.data.CamundaBpmData.booleanVariable;
+import static io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable;
+
 public class PizzaDeliveryProcess {
 
   enum Elements {
@@ -10,8 +15,8 @@ public class PizzaDeliveryProcess {
 
   public enum Variables {
     ;
-    public static final String TYPE = "type";
-    public static final String PACKED = "packed";
+    public static final VariableFactory<String> TYPE = stringVariable("type");
+    public static final VariableFactory<Boolean> PACKED = booleanVariable("packed");
   }
 
   public enum Expressions {
@@ -29,12 +34,12 @@ public class PizzaDeliveryProcess {
 
       public enum Consumes {
         ;
-        public static final String TYPE = Variables.TYPE;
+        public static final VariableFactory<String> TYPE = Variables.TYPE;
       }
 
       public enum Produces {
         ;
-        public static final String PACKED = Variables.PACKED;
+        public static final VariableFactory<Boolean> PACKED = Variables.PACKED;
       }
     }
   }

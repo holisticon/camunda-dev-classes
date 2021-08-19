@@ -1,5 +1,6 @@
 package de.holisticon.academy.camunda.choreography;
 
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -34,9 +35,9 @@ public class PizzaDeliveryProcessTest {
     init(engine.getProcessEngine());
     CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
     CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
-      .onExecutionSetVariables(Variables.putValue(PizzaOrderProcess.Variables.DELIVERED, true));
+      .onExecutionSetVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build());
 
-    this.orderId = "Pizza-Order-" + UUID.randomUUID().toString();
+    this.orderId = "Pizza-Order-" + UUID.randomUUID();
     this.payload = PizzaOrderProcess.createOrder();
 
   }
@@ -71,7 +72,8 @@ public class PizzaDeliveryProcessTest {
     execute(job());
 
     assertThat(deliveryInstance).isEnded();
-    assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, true);
+
+    assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
   }
 
   private static ProcessEngineRule createEngine() {

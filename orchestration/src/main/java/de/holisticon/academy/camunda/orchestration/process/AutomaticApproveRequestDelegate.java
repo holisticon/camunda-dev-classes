@@ -20,15 +20,15 @@ public class AutomaticApproveRequestDelegate implements JavaDelegate {
 
   @Override
   public void execute(DelegateExecution execution) {
-    final String id = (String) execution.getVariable(ApprovalProcessBean.Variables.APPROVAL_ID);
+    final var id = ApprovalProcessBean.Variables.APPROVAL_ID.from(execution).get();
 
     approvalRequestRepository.findById(id).ifPresent(approvalRequest -> {
       try {
         boolean approvalResult = automaticApprovalService.approve(approvalRequest);
         if (approvalResult) {
-          execution.setVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED);
+          ApprovalProcessBean.Variables.APPROVAL_DECISION.on(execution).set(ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED);
         } else {
-          execution.setVariable(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED);
+          ApprovalProcessBean.Variables.APPROVAL_DECISION.on(execution).set(ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED);
         }
       } catch (RuntimeException e) {
         throw new BpmnError(ApprovalProcessBean.Expressions.ERROR);

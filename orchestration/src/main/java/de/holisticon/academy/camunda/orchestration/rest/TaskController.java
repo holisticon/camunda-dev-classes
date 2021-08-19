@@ -2,14 +2,18 @@ package de.holisticon.academy.camunda.orchestration.rest;
 
 
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.task.Task;
-import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +55,7 @@ public class TaskController {
       return ResponseEntity.badRequest().build();
     }
 
-    processBean.complete(task.get().getId(), Variables.putValue(ApprovalProcessBean.Variables.APPROVAL_DECISION, approvalDecision));
+    processBean.complete(task.get().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, approvalDecision).build());
     return ResponseEntity.ok().build();
   }
 
@@ -68,7 +72,7 @@ public class TaskController {
       return ResponseEntity.badRequest().build();
     }
 
-    processBean.complete(task.get().getId(), Variables.putValue(ApprovalProcessBean.Variables.AMEND_ACTION, amendAction));
+    processBean.complete(task.get().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, amendAction).build());
     return ResponseEntity.ok().build();
   }
 

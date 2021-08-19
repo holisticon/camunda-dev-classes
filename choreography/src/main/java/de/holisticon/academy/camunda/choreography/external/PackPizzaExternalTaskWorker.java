@@ -1,7 +1,7 @@
 package de.holisticon.academy.camunda.choreography.external;
 
+import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.camunda.bpm.engine.ExternalTaskService;
-import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,17 +28,16 @@ public class PackPizzaExternalTaskWorker {
       .topic(PackPizza.TOPIC, 1000L)
       .execute()
       .forEach(it -> {
-        final var type = (String) it.getVariables().get(PackPizza.Consumes.TYPE);
+        final var type = PackPizza.Consumes.TYPE.from(it).get();
 
         LOGGER.info("Packing pizza of type {}", type);
 
         externalTaskService.complete(
           it.getId(),
           WORKER_ID,
-          Variables.putValue(
-            PackPizza.Produces.PACKED,
-            true
-          )
+          CamundaBpmData.builder()
+            .set(PackPizza.Produces.PACKED, true)
+            .build()
         );
       });
   }
