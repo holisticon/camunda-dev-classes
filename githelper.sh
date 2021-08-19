@@ -19,6 +19,7 @@ declare -a BRANCHES=(
     "class/11-bpmn-error"
     "class/12-timer"
     "class/13-messages"
+    "class/14-external-task"
 )
 
 echo "--------------------------------------------------"
