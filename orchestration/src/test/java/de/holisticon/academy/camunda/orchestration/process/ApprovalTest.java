@@ -4,13 +4,14 @@ import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.E
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.guard.integration.GuardViolationException;
+import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.test.mock.Mocks;
-import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
@@ -24,7 +25,10 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
 @RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = {"approval.bpmn", "approvalStrategy.dmn"})
@@ -45,6 +49,8 @@ public class ApprovalTest {
     CamundaMockito.registerJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST);
 
     Mocks.register(Expressions.AUDIT, new AuditListener());
+
+    CamundaMockito.registerInstance(VariableGuardConfiguration.MANUAL_APPROVAL_GUARD, new VariableGuardConfiguration().manualApprovalGuard());
   }
 
   @Test
@@ -269,6 +275,29 @@ public class ApprovalTest {
     this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build());
     execute(job());
 
+    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+  }
+
+  @Test
+  public void cannotCompleteManualApprovalTaskWithoutApprovalDecision() {
+    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
+      .onExecutionSetVariables(
+        CamundaBpmData.builder()
+          .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
+          .build()
+      );
+
+    ProcessInstance instance = this.processBean.start("1");
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+
+    execute(job());
+
+    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+
+    final var task = task();
+    Assertions.assertThatThrownBy(() -> this.processBean.complete(task.getId(), CamundaBpmData.builder().build())).hasRootCauseInstanceOf(GuardViolationException.class);
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
 
