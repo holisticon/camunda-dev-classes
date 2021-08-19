@@ -26,6 +26,7 @@ The following branches exist:
     class/11-bpmn-error
     class/12-timer
     class/13-messages
+    class/14-external-task 
 
 Please change the branches using:
 
@@ -319,3 +320,53 @@ Optional
  * set `delivered` to `true`
  * pass only the `delivered` back
 * Checkout the tests
+
+## Class 14: External Tasks
+
+* Add new step: "Pack pizza" after the pizza was made
+* Use `External` as implementation
+* Topic: `pizzaOrder:packPizza`
+* Implement the External Task worker
+  * Use `ExternalTaskService`
+  * Log the ordered `type`
+  * Set a boolean variable: `packed`
+* Fix `PizzaDeliveryProcessTest`
+
+![img](images/class14/pack_pizza.png)
+
+### External Task Process API
+
+```java
+public enum ExternalTasks {
+    ;
+    public enum PackPizza {
+      ;
+      public static final String TOPIC = "orderPizza:packPizza";
+
+      public enum Consumes {
+        ;
+        public static final String TYPE = PizzaDeliveryProcess.Variables.TYPE;
+      }
+
+      public enum Produces {
+        ;
+        public static final String PACKED = PizzaDeliveryProcess.Variables.PACKED;
+      }
+    }
+  }
+```
+
+```java
+externalTaskService.fetchAndLock(5, WORKER_ID)
+      .topic(ExternalTasks.PackPizza.TOPIC, 1000L)
+      .execute()
+      .forEach(it -> {
+        final var type = (String) it.getVariables().get(ExternalTasks.PackPizza.Consumes.TYPE);
+        // ...
+        Variables.putValue(
+            ExternalTasks.PackPizza.Produces.PACKED,
+            true
+          )
+        // ...
+      };
+```
