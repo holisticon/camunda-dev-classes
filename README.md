@@ -52,10 +52,11 @@ In order to run the project, please enter
 
     ./mvnw spring-boot:run
 
-### Camunda URLs
+### URLs
 
-* Cockpit: http://localhost:8080/camunda/app/cockpit/default/
-* Tasklist: http://localhost:8080/camunda/app/tasklist/default/
+* Camunda Cockpit: http://localhost:8080/camunda/app/cockpit/default/
+* Camunda Tasklist: http://localhost:8080/camunda/app/tasklist/default/
+* Swagger-UI: http://localhost:8080/swagger-ui/
 
 # Lab classes
 
