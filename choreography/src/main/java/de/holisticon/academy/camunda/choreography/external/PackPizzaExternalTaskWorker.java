@@ -35,9 +35,11 @@ public class PackPizzaExternalTaskWorker {
         externalTaskService.complete(
           it.getId(),
           WORKER_ID,
-          CamundaBpmData.builder()
-            .set(PackPizza.Produces.PACKED, true)
-            .build()
+          PackPizza.ACL.checkAndWrap(
+            CamundaBpmData.builder()
+              .set(PackPizza.Produces.PACKED, true)
+              .build()
+          )
         );
       });
   }
