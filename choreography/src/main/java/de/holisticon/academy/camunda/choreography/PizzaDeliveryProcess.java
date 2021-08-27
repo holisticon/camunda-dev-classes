@@ -3,15 +3,14 @@ package de.holisticon.academy.camunda.choreography;
 import io.holunda.camunda.bpm.data.acl.AntiCorruptionLayer;
 import io.holunda.camunda.bpm.data.acl.CamundaBpmDataACL;
 import io.holunda.camunda.bpm.data.acl.transform.IdentityVariableMapTransformer;
-import io.holunda.camunda.bpm.data.factory.BasicVariableFactory;
 import io.holunda.camunda.bpm.data.factory.VariableFactory;
 import io.holunda.camunda.bpm.data.guard.VariablesGuard;
-import io.holunda.camunda.bpm.data.guard.condition.VariableExistsGuardCondition;
 
 import java.util.List;
 
 import static io.holunda.camunda.bpm.data.CamundaBpmData.booleanVariable;
 import static io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable;
+import static io.holunda.camunda.bpm.data.guard.CamundaBpmDataGuards.exists;
 
 public class PizzaDeliveryProcess {
 
@@ -44,7 +43,7 @@ public class PizzaDeliveryProcess {
       public static final AntiCorruptionLayer ACL = CamundaBpmDataACL.guardTransformingGlobalReplace(
         "__transient",
         new VariablesGuard(List.of(
-          new VariableExistsGuardCondition<>(Produces.PACKED, false) // conditions
+          exists(Produces.PACKED) // conditions
         )),
         IdentityVariableMapTransformer.INSTANCE
       );
