@@ -27,6 +27,10 @@ The following branches exist:
     class/12-timer
     class/13-messages
     class/14-external-task 
+    class/15-camunda-bpm-data
+    class/16-variable-guard 
+    class/17-acl 
+    class/18-jgiven
 
 Please change the branches using:
 
