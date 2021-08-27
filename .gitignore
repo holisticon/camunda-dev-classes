@@ -47,3 +47,5 @@ out/
 # jEnv
 .java-version
 
+
+orchestration/jgiven-reports/

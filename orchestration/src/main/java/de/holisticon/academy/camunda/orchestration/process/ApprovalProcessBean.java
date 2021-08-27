@@ -80,6 +80,7 @@ public class ApprovalProcessBean {
 
     final static String APPROVAL_REQUESTED = "approval_requested";
     final static String LOAD_APPROVAL_REQUEST = "service_load_approval_request";
+    final static String AUTO_APPROVE_REQUEST = "service_auto_approve_delegate";
     final static String DETERMINE_APPROVAL_STRATEGY = "service_determine_approval_strategy";
     final static String REQUEST_APPROVED = "request_approved";
     final static String REQUEST_REJECTED = "request_rejected";
