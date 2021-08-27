@@ -5,6 +5,7 @@ import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.Format;
 import com.tngtech.jgiven.annotation.Hidden;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
+import com.tngtech.jgiven.format.PrintfFormatter;
 import com.tngtech.jgiven.junit.ScenarioTest;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
@@ -22,7 +23,6 @@ import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestCon
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -43,14 +43,15 @@ public class ApprovalScenarioTest extends ScenarioTest<ApprovalScenarioTest.Give
       .process_is_deployed("approval");
   }
 
-  /**
-   * TODO Please Implement this scenario!
-   * cf. {@link ApprovalTest#shouldStartWaitInApprovalRequested()}
-   */
   @Test
-  @As("When a new Instance is started, it should wait in APPROVAL_REQUESTED")
+  @As("When a new Instance was started, it should wait in APPROVAL_REQUESTED")
   public void shouldStartWaitInApprovalRequested() {
-    Assertions.fail("Please implement this scenario!");
+    when()
+      .process_is_started_with_$("1")
+    ;
+    then()
+      .process_waits_in(Elements.APPROVAL_REQUESTED)
+    ;
   }
 
   @Test
@@ -99,14 +100,22 @@ public class ApprovalScenarioTest extends ScenarioTest<ApprovalScenarioTest.Give
     ;
   }
 
-  /**
-   * TODO Please Implement this scenario!
-   * cf. {@link ApprovalTest#shouldStartAndLoadAndManual()}
-   */
   @Test
   @As("Approval requests with an amount above the threshold have to be approved manually")
   public void shouldStartAndLoadAndManual() {
-    Assertions.fail("Please implement this scenario!");
+    given()
+      .an_approval_request_$(
+        new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))
+      )
+    ;
+    when()
+      .process_is_started_with_$("id")
+      .and()
+      .job_is_executed()
+    ;
+    then()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+    ;
   }
 
   @Test
@@ -246,14 +255,41 @@ public class ApprovalScenarioTest extends ScenarioTest<ApprovalScenarioTest.Give
     ;
   }
 
-  /**
-   * TODO Please Implement this scenario!
-   * cf. {@link ApprovalTest#shouldStartAndLoadAndManualAndReturnedAndResubmit()}
-   */
+
   @Test
   @As("Approval requests, which are returned during manual approval, can be resubmitted by the requester")
   public void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
-    Assertions.fail("Please implement this scenario!");
+    given()
+      .an_approval_request_$(
+        new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))
+      )
+    ;
+    when()
+      .process_is_started_with_$("id")
+      .and()
+      .job_is_executed()
+    ;
+    then()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+    ;
+    when()
+      .task_is_completed_with_variables(
+        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
+        true
+      )
+    ;
+    then()
+      .process_waits_in(Elements.USER_AMEND_REQUEST)
+    ;
+    when()
+      .task_is_completed_with_variables(
+        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build(),
+        true
+      )
+    ;
+    then()
+      .process_waits_in(Elements.USER_APPROVE_REQUEST)
+    ;
   }
 
   @Test

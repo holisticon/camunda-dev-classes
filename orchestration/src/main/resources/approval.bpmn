@@ -4,7 +4,7 @@
     <bpmn:startEvent id="approval_requested" name="Approval requested" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_1ybc6go</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="approval_requested" targetRef="ExclusiveGateway_1r6peaj" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ybc6go" sourceRef="approval_requested" targetRef="join_resubmit" />
     <bpmn:endEvent id="request_approved" name="Request approved">
       <bpmn:extensionElements>
         <camunda:executionListener expression="${audit.log(&#34;Approved&#34;)}" event="start" />
@@ -97,13 +97,13 @@
       </bpmn:extensionElements>
       <bpmn:incoming>flow_finally_cancelled</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_1r6peaj">
+    <bpmn:exclusiveGateway id="join_resubmit">
       <bpmn:incoming>SequenceFlow_1ybc6go</bpmn:incoming>
       <bpmn:incoming>flow_resubmitted</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0agopj5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0agopj5" sourceRef="ExclusiveGateway_1r6peaj" targetRef="service_load_approval_request" />
-    <bpmn:sequenceFlow id="flow_resubmitted" name="yes" sourceRef="xor_amend_action" targetRef="ExclusiveGateway_1r6peaj">
+    <bpmn:sequenceFlow id="SequenceFlow_0agopj5" sourceRef="join_resubmit" targetRef="service_load_approval_request" />
+    <bpmn:sequenceFlow id="flow_resubmitted" name="yes" sourceRef="xor_amend_action" targetRef="join_resubmit">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${amendAction == 'RESUBMITTED'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:businessRuleTask id="service_determine_approval_strategy" name="Determine approval strategy" camunda:resultVariable="approvalStrategy" camunda:decisionRef="approvalStrategy" camunda:mapDecisionResult="singleEntry">
@@ -301,7 +301,7 @@
           <dc:Bounds x="1150" y="370" width="49" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_1r6peaj_di" bpmnElement="ExclusiveGateway_1r6peaj" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="ExclusiveGateway_1r6peaj_di" bpmnElement="join_resubmit" isMarkerVisible="true">
         <dc:Bounds x="211" y="224" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BusinessRuleTask_0vkrxnh_di" bpmnElement="service_determine_approval_strategy">

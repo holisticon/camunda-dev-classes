@@ -47,5 +47,7 @@ out/
 # jEnv
 .java-version
 
+# JGiven
+orchestration/jgiven-reports
 
 orchestration/jgiven-reports/
