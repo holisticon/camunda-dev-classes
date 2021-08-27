@@ -34,7 +34,7 @@ public class ApprovalScenarioTest extends ScenarioTest<ApprovalScenarioTest.Give
 
   @Rule
   @ProvidedScenarioState
-  public final ProcessEngineRule engine = createEngine();
+  public final ProcessEngineRule camunda = createEngine();
 
   @Test
   @Hidden

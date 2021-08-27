@@ -3,17 +3,31 @@ package de.holisticon.academy.camunda.choreography;
 import io.holunda.camunda.bpm.data.acl.AntiCorruptionLayer;
 import io.holunda.camunda.bpm.data.acl.CamundaBpmDataACL;
 import io.holunda.camunda.bpm.data.acl.transform.IdentityVariableMapTransformer;
-import io.holunda.camunda.bpm.data.factory.BasicVariableFactory;
 import io.holunda.camunda.bpm.data.factory.VariableFactory;
 import io.holunda.camunda.bpm.data.guard.VariablesGuard;
 import io.holunda.camunda.bpm.data.guard.condition.VariableExistsGuardCondition;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static io.holunda.camunda.bpm.data.CamundaBpmData.booleanVariable;
 import static io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable;
 
 public class PizzaDeliveryProcess {
+
+  private final RuntimeService runtimeService;
+
+  public PizzaDeliveryProcess(RuntimeService runtimeService) {
+    this.runtimeService = runtimeService;
+  }
+
+  public PizzaDeliveryProcessInstance getByOrderId(String orderId) {
+    return PizzaDeliveryProcessInstance.wrap(
+      runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(orderId).singleResult()
+    );
+  }
 
   enum Elements {
     ;
@@ -58,6 +72,24 @@ public class PizzaDeliveryProcess {
         ;
         public static final VariableFactory<Boolean> PACKED = Variables.PACKED;
       }
+    }
+  }
+
+  public static class PizzaDeliveryProcessInstance implements Supplier<ProcessInstance> {
+
+    static PizzaDeliveryProcessInstance wrap(ProcessInstance processInstance) {
+      return new PizzaDeliveryProcessInstance(processInstance);
+    }
+
+    private final ProcessInstance delegate;
+
+    private PizzaDeliveryProcessInstance(ProcessInstance processInstance) {
+      this.delegate = processInstance;
+    }
+
+    @Override
+    public ProcessInstance get() {
+      return delegate;
     }
   }
 }

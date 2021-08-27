@@ -1,6 +1,12 @@
 package de.holisticon.academy.camunda.choreography;
 
+import com.tngtech.jgiven.annotation.BeforeStage;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.Hidden;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
+import com.tngtech.jgiven.junit.ScenarioTest;
 import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.extension.jgiven.ProcessStage;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -23,63 +29,99 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externa
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
 @Deployment(resources = {"pizzaOrder.bpmn"})
-public class PizzaDeliveryProcessTest {
+public class PizzaDeliveryProcessTest extends ScenarioTest<PizzaDeliveryProcessTest.GivenWhenStage, PizzaDeliveryProcessTest.GivenWhenStage, PizzaDeliveryProcessTest.ThenStage> {
 
   @Rule
-  public final ProcessEngineRule engine = createEngine();
-  private String orderId;
-  private VariableMap payload;
-
-  @Before
-  public void before() {
-    init(engine.getProcessEngine());
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
-      .onExecutionSetVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build());
-
-    this.orderId = "Pizza-Order-" + UUID.randomUUID();
-    this.payload = PizzaOrderProcess.createOrder();
-
-  }
+  @ProvidedScenarioState
+  public final ProcessEngineRule camunda = createEngine();
 
   @Test
+  @Hidden
   public void shouldDeploy() {
-    //
+    then()
+      .process_is_deployed("pizza_delivery");
   }
 
   @Test
   public void shouldStartEnd() {
-
-    this.engine.getRuntimeService().correlateMessage(
-      PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
-      this.orderId,
-      this.payload
-    );
-
-    ProcessInstance deliveryInstance = this.engine.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(this.orderId).singleResult();
-    assertThat(deliveryInstance).isNotNull();
-
-    // async on start
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
-    execute(job());
-
-    // process is waiting for the external task to be completed
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
-    complete(externalTask());
-
-    // The external task ist asyncAfter, so we need to execute that job
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
-    execute(job());
-
-    assertThat(deliveryInstance).isEnded();
-
-    assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
+    when()
+      .a_pizza_is_ordered()
+    ;
+    then()
+      .process_waits_in(PizzaDeliveryProcess.Elements.ORDER_PLACED)
+    ;
+    when()
+      .job_is_executed()
+    ;
+    then()
+      .process_waits_in(PizzaDeliveryProcess.Elements.PACK_PIZZA)
+    ;
+    when()
+      .external_task_is_completed(
+        PizzaDeliveryProcess.ExternalTasks.PackPizza.TOPIC,
+        CamundaBpmData.builder()
+          .set(PizzaDeliveryProcess.ExternalTasks.PackPizza.Produces.PACKED, true)
+          .build(),
+        true
+      )
+    ;
+    then()
+      .process_is_finished()
+      .and()
+      .the_pizza_was_delivered()
+    ;
   }
 
   private static ProcessEngineRule createEngine() {
     StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
     config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
     return config.rule();
+  }
+
+  public static class GivenWhenStage extends ProcessStage<GivenWhenStage, PizzaDeliveryProcess.PizzaDeliveryProcessInstance> {
+
+    @ExpectedScenarioState
+    private PizzaDeliveryProcess pizzaDeliveryProcess;
+
+    @ProvidedScenarioState
+    private String orderId;
+
+    @ProvidedScenarioState
+    private VariableMap payload;
+
+    @BeforeStage
+    public void before() {
+      init(camunda.getProcessEngine());
+
+      CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
+      CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
+        .onExecutionSetVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build());
+
+      this.orderId = "Pizza-Order-" + UUID.randomUUID();
+      this.payload = PizzaOrderProcess.createOrder();
+
+      this.pizzaDeliveryProcess = new PizzaDeliveryProcess(camunda.getRuntimeService());
+    }
+
+    public GivenWhenStage a_pizza_is_ordered() {
+      this.camunda.getRuntimeService().correlateMessage(
+        PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
+        this.orderId,
+        this.payload
+      );
+
+      processInstanceSupplier = pizzaDeliveryProcess.getByOrderId(this.orderId);
+
+      return self();
+    }
+  }
+
+  public static class ThenStage extends ProcessStage<ThenStage, PizzaDeliveryProcess.PizzaDeliveryProcessInstance> {
+    public ThenStage the_pizza_was_delivered() {
+      assertThat(processInstanceSupplier.get()).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
+
+      return self();
+    }
   }
 
 }

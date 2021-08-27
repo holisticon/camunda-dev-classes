@@ -49,5 +49,4 @@ out/
 
 # JGiven
 orchestration/jgiven-reports
-
-orchestration/jgiven-reports/
+choreography/jgiven-reports/

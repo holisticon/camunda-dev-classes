@@ -2,15 +2,20 @@ package de.holisticon.academy.camunda.choreography;
 
 import io.holunda.camunda.bpm.data.CamundaBpmData;
 import io.holunda.camunda.bpm.data.factory.VariableFactory;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.VariableMap;
 
-import static io.holunda.camunda.bpm.data.CamundaBpmData.*;
+import java.util.function.Supplier;
+
+import static io.holunda.camunda.bpm.data.CamundaBpmData.booleanVariable;
+import static io.holunda.camunda.bpm.data.CamundaBpmData.stringVariable;
 
 public class PizzaOrderProcess {
   public static final String KEY = "pizza_order";
 
   enum Elements {
     ;
+    public static final String FOOD_NEEDED = "food_needed";
     public static final String DATA_EXCLUSIVE = "data_exclusive";
     public static final String PLACE_ORDER = "task_place_order";
     public static final String TIMER = "timer";
@@ -39,5 +44,23 @@ public class PizzaOrderProcess {
       .set(Variables.SIZE, "medium")
       .set(Variables.DELIVERED, false)
       .build();
+  }
+
+  public static class PizzaOrderProcessInstance implements Supplier<ProcessInstance> {
+
+    static PizzaOrderProcessInstance wrap(ProcessInstance processInstance) {
+      return new PizzaOrderProcessInstance(processInstance);
+    }
+
+    private final ProcessInstance delegate;
+
+    private PizzaOrderProcessInstance(ProcessInstance processInstance) {
+      this.delegate = processInstance;
+    }
+
+    @Override
+    public ProcessInstance get() {
+      return delegate;
+    }
   }
 }

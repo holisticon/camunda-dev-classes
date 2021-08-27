@@ -61,7 +61,32 @@
       <artifactId>camunda-bpm-mockito</artifactId>
       <version>4.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>io.holunda.testing</groupId>
+      <artifactId>camunda-bpm-jgiven</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.tngtech.jgiven</groupId>
+        <artifactId>jgiven-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <format>html</format>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <!-- Use webapp of ce or ee depending on the profile -->
   <profiles>
