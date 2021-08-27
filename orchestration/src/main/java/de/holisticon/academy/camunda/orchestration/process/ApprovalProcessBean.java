@@ -1,7 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 /**
  * Encapsulates all API methods around the process and Camunda
@@ -14,8 +13,8 @@ public class ApprovalProcessBean {
     this.runtimeService = runtimeService;
   }
 
-  public ProcessInstance start() {
-    return this.runtimeService.startProcessInstanceByKey("approval");
+  public ApprovalProcessInstance start() {
+    return ApprovalProcessInstance.wrap(this.runtimeService.startProcessInstanceByKey("approval"));
   }
 
   enum Elements {
