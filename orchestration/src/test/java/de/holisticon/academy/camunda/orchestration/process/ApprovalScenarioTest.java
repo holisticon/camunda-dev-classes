@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 
@@ -330,7 +331,7 @@ public class ApprovalScenarioTest extends ScenarioTest<ApprovalScenarioTest.Give
     }
 
     public GivenWhenStage $_minutes_pass(Long minutes) {
-      ClockUtil.offset(minutes * 60 * 1000);
+      ClockUtil.offset(Duration.ofMinutes(minutes).toMillis());
 
       return self();
     }
