@@ -371,3 +371,40 @@ externalTaskService.fetchAndLock(5, WORKER_ID)
         // ...
       };
 ```
+
+## Class 15: Variable access with Camunda BPM Data
+
+* Refactor `ApprovalProcessBean.Variables`
+  * Change all variables to be of type `VariableFactory<T>`
+    final static variableFactory<String> APPROVAL_ID = CamundaBpmData.stringVariable("approvalId");
+* Resolve all compile issues
+  * Refactor delegates to use camunda-bpm-data
+  * Refactor all tests
+  * Try not to use `.getName()` as a quick-fix
+* Use different approaches where applicable:
+  * `get`, `set`, `builder`, `reader`, `writer` ...
+
+## Class 16: Variable Guards
+
+* Provide a Guard for "Approve request"
+  * There is a failing test
+  * Ensure that the task can only be completed when `APPROVAL_DECISION` is set <br>
+
+![img](images/class16/insert-guard-here.png)
+
+## Class 17: Anti Corruption Layer
+
+* Provide an Anti Corruption Layer for "Pack pizza"
+  * Ensure that the ExternalTaskWorker can only complete when `PACKED` is set
+  * Place it in `PizzaDeliveryProcess.ExternalTask.PackPizza`
+  * Use it in the `PackPizzaExternalTaskWorker`
+
+## Class 18: Camunda BPM JGiven
+
+* Explore ApprovalScenarioTest
+  * Not a single assert written manually --> `ThenStage` is empty!
+  * Only custom steps specific for this process in `GivenWhenStage`
+  * Everything else is coming from camunda-bpm-jgiven
+* Complete the missing scenarios
+* Run `./mvnw clean install`
+* Explore the HTML report in <br>`orchestration/target/jgiven-reports/html/index.html`
