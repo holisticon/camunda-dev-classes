@@ -1,6 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessInstance;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
@@ -26,8 +27,8 @@ public class ProcessStarterController {
   @PostMapping(path = "/approval")
   @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
   public ResponseEntity<String> startApprovalProcess() {
-    ProcessInstance instance = approvalProcessBean.start();
-    return ok(instance.getProcessInstanceId());
+    ApprovalProcessInstance instance = approvalProcessBean.start();
+    return ok(instance.get().getProcessInstanceId());
   }
 
 }
