@@ -1,6 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
+import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessInstance;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
