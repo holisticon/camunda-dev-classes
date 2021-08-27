@@ -21,10 +21,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.Duration;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
 @RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = {"approval.bpmn", "approvalStrategy.dmn"})
@@ -106,7 +109,6 @@ public class ApprovalTest {
     CamundaMockito.verifyJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST).executed();
     CamundaMockito.verifyJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST).executed();
   }
-
 
   @Test
   public void shouldStartAndLoadAndManual() {
@@ -230,11 +232,7 @@ public class ApprovalTest {
     this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
     execute(job());
 
-
-    Calendar time = Calendar.getInstance();
-    time.setTime(ClockUtil.getCurrentTime());
-    time.add(Calendar.MINUTE, 5);
-    ClockUtil.setCurrentTime(time.getTime());
+    ClockUtil.offset(Duration.ofMinutes(5).toMillis());
 
     execute(job());
 

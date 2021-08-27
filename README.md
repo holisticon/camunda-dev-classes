@@ -287,7 +287,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 * Request is cancelled if timed-out
 * Add a boundary timer event
 * What about the test?
- * `ClockUtil.setCurrentTime()`
+ * `ClockUtil#offset(Long)`
 
 ## Class 13: Messages
 
