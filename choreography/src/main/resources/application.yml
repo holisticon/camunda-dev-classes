@@ -34,17 +34,10 @@ camunda:
       password: admin
     filter:
       create: All
+    login:
+      enabled: true
+      user-id: admin
 
-swagger:
-  enabled: true
-  apiInfo:
-    title: Camunda Developer Workshop Classes
-    description: Use REST endpoints.
-    contact:
-      name: Holisticon AG
-      email: bpmsoa@holisticon.de
-      url: https://www.holisticon.de
-  dockets:
-    choreography:
-      basePackage: "de.holisticon.academy.camunda.choreography.rest"
-      path: "/**"
+springdoc:
+  packagesToScan: de.holisticon.academy.camunda.choreography.rest
+  pathsToMatch: /**
