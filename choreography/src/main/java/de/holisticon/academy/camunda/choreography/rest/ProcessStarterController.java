@@ -1,12 +1,10 @@
 package de.holisticon.academy.camunda.choreography.rest;
 
 import de.holisticon.academy.camunda.choreography.PizzaOrderProcess;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.EventSubscription;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.model.bpmn.instance.Event;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +14,7 @@ import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-@Api(value = "/process/start")
+@Tag(name = "/process/start")
 @RestController
 @RequestMapping("/process/start")
 public class ProcessStarterController {
@@ -28,7 +26,7 @@ public class ProcessStarterController {
   }
 
   @PostMapping(path = "/pizza-order")
-  @ApiOperation(httpMethod = "POST", value = "Starts pizza order process.", response = String.class)
+  @Operation(summary = "Starts pizza order process.")
   public ResponseEntity<String> startPizzaOrderProcess() {
 
     final ProcessInstance instance = this.runtimeService.startProcessInstanceByKey(
