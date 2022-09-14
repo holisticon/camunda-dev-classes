@@ -1,7 +1,8 @@
 package de.holisticon.academy.camunda.orchestration;
 
-import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
-import de.holisticon.academy.camunda.orchestration.service.AutomaticApprovalService;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
 import org.camunda.bpm.application.ProcessApplication;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
@@ -22,20 +23,32 @@ public class OrchestrationProcessApplication {
   ProcessEnginePlugin disableTelemetry() {
 
     return new ProcessEnginePlugin() {
-      @Override
-      public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
+      @Override public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
         processEngineConfiguration.setTelemetryReporterActivate(false);
         processEngineConfiguration.setInitializeTelemetry(false);
       }
 
-      @Override
-      public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
+      @Override public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
       }
 
-      @Override
-      public void postProcessEngineBuild(ProcessEngine processEngine) {
+      @Override public void postProcessEngineBuild(ProcessEngine processEngine) {
       }
     };
   }
 
+  @Bean
+  public OpenAPI orchestrationApi() {
+    return new OpenAPI()
+        .info(
+          new Info()
+            .title("Camunda Developer Workshop Classes")
+            .description("REST endpoints for process application control.")
+            .version("v0.0.1")
+            .contact(
+              new Contact()
+                .name("Holisticon AG")
+                .url("https://holisticon.de/")
+            )
+        );
+  }
 }
