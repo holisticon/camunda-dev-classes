@@ -34,6 +34,9 @@ camunda:
       first-name: Admin
       last-name: Administratus
       password: admin
+    login:
+      enabled: true
+      user-id: admin
 
 swagger:
   enabled: true
