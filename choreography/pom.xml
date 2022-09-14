@@ -30,10 +30,6 @@
       <artifactId>camunda-engine-plugin-spin</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.holunda</groupId>
-      <artifactId>camunda-platform-7-autologin</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.camunda.spin</groupId>
       <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
       <version>${version.camunda.spin}</version>
@@ -45,6 +41,10 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.holunda</groupId>
+      <artifactId>camunda-platform-7-autologin</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
