@@ -70,7 +70,6 @@
         <artifactId>springdoc-openapi-ui</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
-
       <!-- Camunda Data -->
       <dependency>
         <groupId>io.holunda.data</groupId>
