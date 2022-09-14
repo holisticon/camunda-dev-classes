@@ -1,7 +1,7 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-@Api(value = "/process/start")
+@Tag(name = "/process/start")
 @RestController
 @RequestMapping("/process/start")
 public class ProcessStarterController {
@@ -23,7 +23,7 @@ public class ProcessStarterController {
   }
 
   @PostMapping(path = "/approval")
-  @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
+  @Operation(summary = "Starts approval process.", description = "This operation starts the process.")
   public ResponseEntity<String> startApprovalProcess() {
     ProcessInstance instance = this.runtimeService.startProcessInstanceByKey("approval");
     return ok(instance.getProcessInstanceId());
