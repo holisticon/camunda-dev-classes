@@ -2,9 +2,10 @@ package de.holisticon.academy.camunda.orchestration.rest;
 
 
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
+
 import io.holunda.camunda.bpm.data.CamundaBpmData;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.task.Task;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-@Api(value = "/task")
+@Tag(name = "/task")
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -33,7 +34,7 @@ public class TaskController {
   }
 
   @GetMapping
-  @ApiOperation(httpMethod = "GET", value = "Retrieves all user tasks.")
+  @Operation(summary = "Retrieves all user tasks.")
   public ResponseEntity<List<TaskDto>> getTasks() {
     return ok(
       processBean.getTasks()
@@ -43,7 +44,7 @@ public class TaskController {
   }
 
   @PostMapping(path = "/approve/{taskId}/{approvalDecision}")
-  @ApiOperation(httpMethod = "POST", value = "Completes the approve request task")
+  @Operation(summary = "Completes the approve request task")
   public ResponseEntity<Void> completeApproveTask(@PathVariable(name = "taskId") String taskId, @PathVariable(name = "approvalDecision") String approvalDecision) {
 
     if (!processBean.isValidApprovalDecision(approvalDecision)) {
@@ -51,7 +52,7 @@ public class TaskController {
     }
 
     Optional<Task> task = processBean.approveTask(taskId);
-    if (!task.isPresent()) {
+    if (task.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
 
@@ -60,7 +61,7 @@ public class TaskController {
   }
 
   @PostMapping(path = "/amend/{taskId}/{amendAction}")
-  @ApiOperation(httpMethod = "POST", value = "Starts approval process.")
+  @Operation(summary = "Starts approval process.")
   public ResponseEntity<Void> completeAmendTask(@PathVariable(name = "taskId") String taskId, @PathVariable(name = "amendAction") String amendAction) {
 
     if (!processBean.isValidAmendAction(amendAction)) {
@@ -68,7 +69,7 @@ public class TaskController {
     }
 
     Optional<Task> task = processBean.amendTask(taskId);
-    if (!task.isPresent()) {
+    if (task.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
 
