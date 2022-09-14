@@ -96,6 +96,13 @@
         <version>1.2.3</version>
       </dependency>
 
+      <!-- Autologin -->
+      <dependency>
+        <groupId>io.holunda</groupId>
+        <artifactId>camunda-platform-7-autologin</artifactId>
+        <version>0.0.1</version>
+      </dependency>
+
       <!-- Testing -->
       <dependency>
         <groupId>org.camunda.bpm.springboot</groupId>
