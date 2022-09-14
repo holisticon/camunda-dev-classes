@@ -34,7 +34,17 @@ import org.springframework.context.annotation.Bean;
   }
 
   @Bean public OpenAPI orchestrationApi() {
-    return new OpenAPI().info(new Info().title("Camunda Developer Workshop Classes").description("REST endpoints for process application control.")
-      .version("v0.0.1").contact(new Contact().name("Holisticon AG").url("https://holisticon.de/")));
+    return new OpenAPI()
+        .info(
+          new Info()
+            .title("Camunda Developer Workshop Classes")
+            .description("REST endpoints for process application control.")
+            .version("v0.0.1")
+            .contact(
+              new Contact()
+                .name("Holisticon AG")
+                .url("https://holisticon.de/")
+            )
+        );
   }
 }
