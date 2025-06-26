@@ -46,14 +46,10 @@ case "$1" in
     ;;
   "pull")
     echo "Pull command detected, will pull every branch"
-    COMMAND="git pull origin"
-    ;;
-  "push-public")
-    echo "Push to publi command detected. will push every."
-    COMMAND="git push public"
+    COMMAND="git pull origin -r"
     ;;
   *)
-    echo "No command detected, will just merge branches but let them locally. Try $0 build | pull | push | push-public"
+    echo "No command detected, will just merge branches but let them locally. Try $0 build | pull | push"
     ;;
 esac
 
@@ -69,8 +65,17 @@ do
     echo "Merging changes from $PREVIOUS branch to $CURRENT"
     git merge $PREVIOUS --no-edit
 
-    echo "Executing command $COMMAND"
-    $($COMMAND)
+    if [[ -n "$COMMAND" ]]; then
+        echo "Executing command: $COMMAND"
+        eval "$COMMAND"
+        STATUS=$?
+        if [[ $STATUS -ne 0 ]]; then
+            echo "Command failed with exit code $STATUS – aborting loop."
+            break
+        fi
+    else
+        echo "No command to execute – continuing."
+    fi
 done
 
 git checkout ${BRANCHES[0]}
