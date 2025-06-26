@@ -109,7 +109,7 @@
           <!-- cleaning -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.5.0</version>
         </plugin>
 
         <!-- Coverage metering -->
@@ -215,7 +215,7 @@
           <!-- resources -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.3.1</version>
         </plugin>
 
         <plugin>
@@ -282,7 +282,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>3.5.3</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -299,7 +299,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.18.1</version>
+          <version>3.5.3</version>
         </plugin>
 
       </plugins>
@@ -332,7 +332,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.22.1</version>
+            <version>3.5.3</version>
             <executions>
               <execution>
                 <goals>
