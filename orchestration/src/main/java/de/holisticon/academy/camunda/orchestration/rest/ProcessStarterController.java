@@ -1,9 +1,9 @@
 package de.holisticon.academy.camunda.orchestration.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessInstance;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-@Api(value = "/process/start")
+@Tag(name = "/process/start")
 @RestController
 @RequestMapping("/process/start")
 public class ProcessStarterController {
@@ -27,7 +27,7 @@ public class ProcessStarterController {
   }
 
   @PostMapping(path = "/approval/{id}")
-  @ApiOperation(httpMethod = "POST", value = "Starts approval process.", response = String.class)
+  @Operation(summary = "Starts approval process.", description = "This operation starts the process.")
   public ResponseEntity<String> startApprovalProcess(@PathVariable(name = "id") String id) {
     ProcessInstance instance = approvalProcessBean.start(id);
     return ok(instance.getProcessInstanceId());
