@@ -19,25 +19,7 @@ public class OrchestrationProcessApplication {
     SpringApplication.run(OrchestrationProcessApplication.class, args);
   }
 
-  @Bean
-  ProcessEnginePlugin disableTelemetry() {
-
-    return new ProcessEnginePlugin() {
-      @Override public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
-        processEngineConfiguration.setTelemetryReporterActivate(false);
-        processEngineConfiguration.setInitializeTelemetry(false);
-      }
-
-      @Override public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
-      }
-
-      @Override public void postProcessEngineBuild(ProcessEngine processEngine) {
-      }
-    };
-  }
-
-  @Bean
-  public OpenAPI orchestrationApi() {
+  @Bean public OpenAPI orchestrationApi() {
     return new OpenAPI()
         .info(
           new Info()
