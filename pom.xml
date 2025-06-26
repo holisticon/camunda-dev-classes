@@ -22,7 +22,7 @@
     <camunda.version.ee>7.23.0-ee</camunda.version.ee>
     <camunda-commons.version>${camunda.version}</camunda-commons.version>
 
-    <springboot.version>3.4.7</springboot.version>
+    <springboot.version>3.5.3</springboot.version>
     <version.camunda.spin>${camunda.version}</version.camunda.spin>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <springdoc.version>1.8.0</springdoc.version>
