@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0rsidqy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0rsidqy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.36.0">
   <bpmn:collaboration id="Collaboration_1timafs">
     <bpmn:participant id="Participant_14ejuqd" name="Pizza order" processRef="pizza_order" />
     <bpmn:participant id="Participant_1mvcl63" name="Pizza delivery" processRef="pizza_delivery" />
     <bpmn:messageFlow id="MessageFlow_06zvwx2" sourceRef="task_place_order" targetRef="order_placed" />
     <bpmn:messageFlow id="MessageFlow_03uu66z" sourceRef="task_deliver_pizza" targetRef="message_event_pizza_received" />
   </bpmn:collaboration>
-  <bpmn:process id="pizza_order" name="Pizza order" isExecutable="true">
+  <bpmn:process id="pizza_order" name="Pizza order" isExecutable="true" camunda:historyTimeToLive="P1D">
     <bpmn:startEvent id="food_needed" name="Food needed" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_0u2axqi</bpmn:outgoing>
     </bpmn:startEvent>
@@ -50,7 +50,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_11fsip4" sourceRef="task_place_order" targetRef="data_exclusive" />
     <bpmn:sequenceFlow id="SequenceFlow_0u2axqi" sourceRef="food_needed" targetRef="task_place_order" />
   </bpmn:process>
-  <bpmn:process id="pizza_delivery" name="Pizza delivery" isExecutable="true">
+  <bpmn:process id="pizza_delivery" name="Pizza delivery" isExecutable="true" camunda:historyTimeToLive="P1D">
     <bpmn:startEvent id="order_placed" name="Order placed" camunda:asyncAfter="true">
       <bpmn:outgoing>SequenceFlow_000bhhh</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_11le573" />
