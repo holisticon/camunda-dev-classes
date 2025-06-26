@@ -70,7 +70,7 @@ do
     git merge $PREVIOUS --no-edit
 
     echo "Executing command $COMMAND"
-    `$COMMAND`
+    $($COMMAND)
 done
 
 git checkout ${BRANCHES[0]}
