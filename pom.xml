@@ -12,20 +12,20 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
+    <java.version>21</java.version>
     <version.java>${java.version}</version.java>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
     <camunda-ee>false</camunda-ee>
-    <camunda.version>7.15.0</camunda.version>
-    <camunda.version.ee>7.15.0-ee</camunda.version.ee>
-    <camunda-commons.version>1.10.0</camunda-commons.version>
+    <camunda.version>7.23.0</camunda.version>
+    <camunda.version.ee>7.23.0-ee</camunda.version.ee>
+    <camunda-commons.version>${camunda.version}</camunda-commons.version>
 
-    <springboot.version>2.5.3</springboot.version>
-    <version.camunda.spin>1.11.0</version.camunda.spin>
-    <jackson.version>2.12.4</jackson.version>
-    <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+    <springboot.version>3.4.7</springboot.version>
+    <version.camunda.spin>${camunda.version}</version.camunda.spin>
+    <org.mapstruct.version>1.6.3</org.mapstruct.version>
+    <springdoc.version>1.8.0</springdoc.version>
   </properties>
 
   <modules>
@@ -55,24 +55,6 @@
         <artifactId>groovy</artifactId>
         <version>3.0.8</version>
       </dependency>
-
-      <!-- Jackson -->
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jsr310</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-
       <!-- Import dependency management from SpringBoot -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -82,18 +64,24 @@
         <type>pom</type>
       </dependency>
 
-      <!-- Swagger -->
+      <!-- Swagger and SpringDoc -->
       <dependency>
-        <groupId>io.toolisticon.springboot</groupId>
-        <artifactId>springboot-swagger-starter</artifactId>
-        <version>0.3.0</version>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-ui</artifactId>
+        <version>${springdoc.version}</version>
       </dependency>
-
       <!-- Camunda Data -->
       <dependency>
         <groupId>io.holunda.data</groupId>
         <artifactId>camunda-bpm-data</artifactId>
-        <version>1.2.3</version>
+        <version>2025.06.1</version>
+      </dependency>
+
+      <!-- Autologin -->
+      <dependency>
+        <groupId>io.holunda</groupId>
+        <artifactId>camunda-platform-7-autologin</artifactId>
+        <version>2025.06.1</version>
       </dependency>
 
       <!-- Testing -->
@@ -106,7 +94,7 @@
       <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
-        <version>5.15.0</version>
+        <version>5.16.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
