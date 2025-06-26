@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" id="Definitions_0l63lle" name="DRD" namespace="http://camunda.org/schema/1.0/dmn">
-  <decision id="approvalStrategy" name="Approval Strategy">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="Definitions_0l63lle" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.36.0">
+  <decision id="approvalStrategy" name="Approval Strategy" camunda:historyTimeToLive="P1D">
     <decisionTable id="decisionTable_1" hitPolicy="FIRST">
       <input id="input_1" label="Approval Amount">
         <inputExpression id="inputExpression_1" typeRef="double">
@@ -26,4 +26,11 @@
       </rule>
     </decisionTable>
   </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_12d52im">
+      <dmndi:DMNShape id="DMNShape_0lycy6a" dmnElementRef="approvalStrategy">
+        <dc:Bounds height="80" width="180" x="150" y="80" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
 </definitions>
