@@ -22,6 +22,8 @@
     <camunda.version.ee>7.23.0-ee</camunda.version.ee>
     <camunda-commons.version>${camunda.version}</camunda-commons.version>
 
+    <holunda-c7.version>2025.06.1</holunda-c7.version>
+
     <springboot.version>3.4.7</springboot.version>
     <version.camunda.spin>${camunda.version}</version.camunda.spin>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
@@ -74,14 +76,14 @@
       <dependency>
         <groupId>io.holunda.data</groupId>
         <artifactId>camunda-bpm-data</artifactId>
-        <version>2025.06.1</version>
+        <version>${holunda-c7.version}</version>
       </dependency>
 
       <!-- Autologin -->
       <dependency>
         <groupId>io.holunda</groupId>
         <artifactId>camunda-platform-7-autologin</artifactId>
-        <version>2025.06.1</version>
+        <version>${holunda-c7.version}</version>
       </dependency>
 
       <!-- Testing -->
@@ -94,7 +96,7 @@
       <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
-        <version>5.16.0</version>
+        <version>${holunda-c7.version}</version>
         <scope>test</scope>
       </dependency>
 
