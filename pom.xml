@@ -22,6 +22,8 @@
     <camunda.version.ee>7.23.0-ee</camunda.version.ee>
     <camunda-commons.version>${camunda.version}</camunda-commons.version>
 
+    <holunda-c7.version>2025.06.1</holunda-c7.version>
+
     <springboot.version>3.4.7</springboot.version>
     <version.camunda.spin>${camunda.version}</version.camunda.spin>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
@@ -54,7 +56,7 @@
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy</artifactId>
-        <version>3.0.8</version>
+        <version>3.0.25</version>
       </dependency>
       <!-- Import dependency management from SpringBoot -->
       <dependency>
@@ -75,14 +77,14 @@
       <dependency>
         <groupId>io.holunda.data</groupId>
         <artifactId>camunda-bpm-data</artifactId>
-        <version>2025.06.1</version>
+        <version>${holunda-c7.version}</version>
       </dependency>
 
       <!-- Autologin -->
       <dependency>
         <groupId>io.holunda</groupId>
         <artifactId>camunda-platform-7-autologin</artifactId>
-        <version>2025.06.1</version>
+        <version>${holunda-c7.version}</version>
       </dependency>
 
       <!-- Testing -->
@@ -220,7 +222,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.14.0</version>
         </plugin>
 
         <plugin>
@@ -234,7 +236,7 @@
           <!-- jar -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.4.2</version>
           <configuration>
             <archive>
               <manifest>
