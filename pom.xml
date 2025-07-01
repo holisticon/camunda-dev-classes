@@ -96,7 +96,7 @@
       <dependency>
         <groupId>org.camunda.bpm.extension.mockito</groupId>
         <artifactId>camunda-bpm-mockito</artifactId>
-        <version>${holunda-c7.version}</version>
+        <version>5.16.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
