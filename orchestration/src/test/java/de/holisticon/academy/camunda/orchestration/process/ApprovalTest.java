@@ -8,17 +8,15 @@ import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
-import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -29,19 +27,18 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
-@RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = {"approval.bpmn", "approvalStrategy.dmn"})
-public class ApprovalTest {
+class ApprovalTest {
 
+  @RegisterExtension
+  static ProcessEngineExtension extension = createExtension();
 
-  @Rule
-  public final ProcessEngineRule engine = createEngine();
   private ApprovalProcessBean processBean;
 
-  @Before
-  public void before() {
-    this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService(), this.engine.getTaskService());
-    init(engine.getProcessEngine());
+  @BeforeEach
+  void setUp() {
+    this.processBean = new ApprovalProcessBean(extension.getRuntimeService(), extension.getTaskService());
+    init(extension.getProcessEngine());
 
     CamundaMockito.registerJavaDelegateMock(Expressions.DETERMINE_APPROVAL_STRATEGY);
     CamundaMockito.registerJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST);
@@ -51,12 +48,12 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldDeploy() {
+  void shouldDeploy() {
     // no asserts, deployment would throw exception and fail the test on errors
   }
 
   @Test
-  public void shouldStartWaitInApprovalRequested() {
+  void shouldStartWaitInApprovalRequested() {
     ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
@@ -65,15 +62,15 @@ public class ApprovalTest {
 
 
   @Test
-  public void shouldStartAndLoadAndApprove() {
+  void shouldStartAndLoadAndApprove() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81")))
           .build()
       );
-
-    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
@@ -86,13 +83,25 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndApproveAndFail() {
+  void shouldStartAndLoadAndReject() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(
-        CamundaBpmData.builder()
-          .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12")))
-          .build()
-      );
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+
+    execute(job());
+
+    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+
+  }
+
+  @Test
+  void shouldStartAndLoadAndApproveAndFail() {
+    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12"))));
 
     CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
       .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
@@ -111,13 +120,16 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndManual() {
+  void shouldStartAndLoadAndManual() {
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
           .build()
       );
+
+    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
+      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
 
     ProcessInstance instance = this.processBean.start("1");
 
@@ -131,15 +143,15 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndManualAndApprove() {
+  void shouldStartAndLoadAndManualAndApprove() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
           .build()
       );
-
-    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
@@ -157,15 +169,15 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndManualAndReject() {
+  void shouldStartAndLoadAndManualAndReject() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
           .build()
       );
-
-    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
@@ -183,15 +195,15 @@ public class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndManualAndReturnedAndCancel() {
+  void shouldStartAndLoadAndManualAndReturnedAndCancel() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
           .build()
       );
-
-    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
@@ -242,17 +254,16 @@ public class ApprovalTest {
     );
   }
 
-
   @Test
-  public void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
+  void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
+    ProcessInstance instance = this.processBean.start("1");
+
     CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
       .onExecutionSetVariables(
         CamundaBpmData.builder()
           .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
           .build()
       );
-
-    ProcessInstance instance = this.processBean.start("1");
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
@@ -270,9 +281,13 @@ public class ApprovalTest {
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
 
-  private static ProcessEngineRule createEngine() {
+  static ProcessEngineExtension createExtension() {
     StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
     config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
-    return config.rule();
+
+    return ProcessEngineExtension.builder()
+      .useProcessEngine(config.buildProcessEngine())
+      .build();
   }
+
 }
