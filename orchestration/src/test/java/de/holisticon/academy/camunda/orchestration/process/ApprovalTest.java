@@ -75,26 +75,8 @@ class ApprovalTest {
       Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.DETERMINE_APPROVAL_STRATEGY, Elements.REQUEST_APPROVED);
   }
 
-  @Test
-  void shouldStartAndLoadAndReject() {
-    ProcessInstance instance = this.processBean.start("1");
-
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81"))));
-
-    assertThat(instance).isNotNull();
-    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
-
-    execute(job());
-
-    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-
-  }
-
-  @Test
-  void shouldStartAndLoadAndApproveAndFail() {
-    CamundaMockito.getJavaDelegateMock(Expressions.LOAD_APPROVAL_REQUEST)
-      .onExecutionSetVariables(Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12"))));
+    @Test
+    public void shouldStartAndLoadAndApproveAndFail() {
 
     CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
       .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
@@ -104,7 +86,11 @@ class ApprovalTest {
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
 
-    execute(job());
+        execute(job());
+
+        assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
+        complete(externalTask(), Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81"))));
+        execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
