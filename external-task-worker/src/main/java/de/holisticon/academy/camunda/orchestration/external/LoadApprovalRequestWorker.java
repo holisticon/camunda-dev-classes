@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-@ExternalTaskSubscription()
+@ExternalTaskSubscription(topicName = "load-approval-request")
 public class LoadApprovalRequestWorker implements ExternalTaskHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadApprovalRequestWorker.class);
