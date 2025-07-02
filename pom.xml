@@ -105,6 +105,12 @@
         <version>${camunda.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-bpm-junit5</artifactId>
+      <version>${camunda.version}</version>
+      <scope>test</scope>
+    </dependency>
 
     </dependencies>
   </dependencyManagement>
