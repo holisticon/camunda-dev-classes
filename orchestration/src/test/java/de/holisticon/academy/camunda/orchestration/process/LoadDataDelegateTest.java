@@ -6,7 +6,7 @@ import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestReposi
 import io.holunda.camunda.bpm.data.CamundaBpmData;
 import io.holunda.camunda.bpm.data.reader.VariableReader;
 import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
@@ -14,16 +14,18 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-public class LoadDataDelegateTest {
+class LoadDataDelegateTest {
 
-  private ApprovalRequestRepository approvalRequestRepository = Mockito.mock(ApprovalRequestRepository.class);
+  private final ApprovalRequestRepository approvalRequestRepository = Mockito.mock(ApprovalRequestRepository.class);
 
-  private LoadApprovalRequestDelegate delegate = new LoadApprovalRequestDelegate(approvalRequestRepository);
+  private final LoadApprovalRequestDelegate delegate = new LoadApprovalRequestDelegate(approvalRequestRepository);
 
   @Test
-  public void shouldSetVariable() {
+  void shouldSetVariable() {
     final ApprovalRequest approvalRequest = new ApprovalRequest("1", "Salary increase", "kermit", BigDecimal.valueOf(1000L));
 
     when(approvalRequestRepository.findById(any())).thenReturn(Optional.of(approvalRequest));
