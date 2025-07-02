@@ -3,15 +3,14 @@ package de.holisticon.academy.camunda.choreography;
 import io.holunda.camunda.bpm.data.CamundaBpmData;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.variable.VariableMap;
-import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
@@ -23,63 +22,66 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externa
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
 @Deployment(resources = {"pizzaOrder.bpmn"})
-public class PizzaDeliveryProcessTest {
+class PizzaDeliveryProcessTest {
 
-  @Rule
-  public final ProcessEngineRule engine = createEngine();
-  private String orderId;
-  private VariableMap payload;
+    @RegisterExtension
+    static ProcessEngineExtension extension = createExtension();
 
-  @Before
-  public void before() {
-    init(engine.getProcessEngine());
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
-      .onExecutionSetVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build());
+    private String orderId;
+    private VariableMap payload;
 
-    this.orderId = "Pizza-Order-" + UUID.randomUUID();
-    this.payload = PizzaOrderProcess.createOrder();
+    @BeforeEach
+    void before() {
+        init(extension.getProcessEngine());
+        CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
+        CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
+                .onExecutionSetVariables(CamundaBpmData.builder().set(PizzaOrderProcess.Variables.DELIVERED, true).build());
 
-  }
+        this.orderId = "Pizza-Order-" + UUID.randomUUID().toString();
+        this.payload = PizzaOrderProcess.createOrder();
 
-  @Test
-  public void shouldDeploy() {
-    //
-  }
+    }
 
-  @Test
-  public void shouldStartEnd() {
+    @Test
+    void shouldDeploy() {
+        //
+    }
 
-    this.engine.getRuntimeService().correlateMessage(
-      PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
-      this.orderId,
-      this.payload
-    );
+    @Test
+    void shouldStartEnd() {
 
-    ProcessInstance deliveryInstance = this.engine.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(this.orderId).singleResult();
-    assertThat(deliveryInstance).isNotNull();
+        extension.getRuntimeService().correlateMessage(
+                PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
+                this.orderId,
+                this.payload
+        );
 
-    // async on start
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
-    execute(job());
+        ProcessInstance deliveryInstance = extension.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(this.orderId).singleResult();
+        assertThat(deliveryInstance).isNotNull();
 
-    // process is waiting for the external task to be completed
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
-    complete(externalTask());
+        // async on start
+        assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
+        execute(job());
 
-    // The external task ist asyncAfter, so we need to execute that job
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
-    execute(job());
+        // The external task ist asyncAfter, so we need to execute that job
+        // process is waiting for the external task to be completed
+        assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
+        complete(externalTask());
 
-    assertThat(deliveryInstance).isEnded();
+        // The external task ist asyncAfter, so we need to execute that job
+        assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.PACK_PIZZA);
+        execute(job());
 
-    assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
-  }
+        assertThat(deliveryInstance).isEnded();
+        assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED.getName(), true);
+    }
 
-  private static ProcessEngineRule createEngine() {
-    StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
-    config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
-    return config.rule();
-  }
+    static ProcessEngineExtension createExtension() {
+        StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
+        config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
 
+        return ProcessEngineExtension.builder()
+                .useProcessEngine(config.buildProcessEngine())
+                .build();
+    }
 }
