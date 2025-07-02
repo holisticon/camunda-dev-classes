@@ -1,18 +1,18 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
 import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DetermineApprovalStrategyDelegateTest {
+class DetermineApprovalStrategyDelegateTest {
 
   private final DetermineApprovalStrategyDelegate delegate = new DetermineApprovalStrategyDelegate();
 
   @Test
-  public void shouldSelectAutomaticStrategy() {
+  void shouldSelectAutomaticStrategy() {
 
     DelegateExecutionFake execution = new DelegateExecutionFake().withVariable(ApprovalProcessBean.Variables.AMOUNT, new BigDecimal("12.17"));
 
@@ -24,7 +24,7 @@ public class DetermineApprovalStrategyDelegateTest {
 
 
   @Test
-  public void shouldSelectManualStrategy() {
+  void shouldSelectManualStrategy() {
 
     DelegateExecutionFake execution = new DelegateExecutionFake().withVariable(ApprovalProcessBean.Variables.AMOUNT, new BigDecimal("100.00"));
 

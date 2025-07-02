@@ -4,7 +4,7 @@ import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import de.holisticon.academy.camunda.orchestration.service.AutomaticApprovalService;
 import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
@@ -12,9 +12,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-public class AutomaticApproveRequestDelegateTest {
+class AutomaticApproveRequestDelegateTest {
 
   private AutomaticApprovalService approvalService = mock(AutomaticApprovalService.class);
   private ApprovalRequestRepository approvalRequestRepository = Mockito.mock(ApprovalRequestRepository.class);
@@ -22,7 +25,7 @@ public class AutomaticApproveRequestDelegateTest {
   private AutomaticApproveRequestDelegate delegate = new AutomaticApproveRequestDelegate(approvalRequestRepository, approvalService);
 
   @Test
-  public void test_approve() {
+  void test_approve() {
 
     final ApprovalRequest approvalRequest = new ApprovalRequest("1", "Salary increase", "kermit", BigDecimal.valueOf(10L));
     when(approvalRequestRepository.findById(any())).thenReturn(Optional.of(approvalRequest));
@@ -41,7 +44,7 @@ public class AutomaticApproveRequestDelegateTest {
   }
 
   @Test
-  public void test_reject() {
+  void test_reject() {
 
     final ApprovalRequest approvalRequest = new ApprovalRequest("1", "Salary increase", "kermit", BigDecimal.valueOf(10L));
     when(approvalRequestRepository.findById(any())).thenReturn(Optional.of(approvalRequest));
