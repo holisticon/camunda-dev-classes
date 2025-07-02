@@ -9,13 +9,12 @@ import org.camunda.bpm.client.task.ExternalTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.Optional;
 
 @Component
-@ExternalTaskSubscription(
-  topicName = "load-approval-request"
-)
+@ExternalTaskSubscription()
 public class LoadApprovalRequestWorker implements ExternalTaskHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoadApprovalRequestWorker.class);
@@ -51,5 +50,4 @@ public class LoadApprovalRequestWorker implements ExternalTaskHandler {
       }
     );
   }
->>>>>>> 2569942 (Prepare external task class)
 }
