@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: camunda-external-task-worker
+  datasource:
+    url: jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: create
+    show-sql: false
+    open-in-view: false
+
+camunda.bpm.client:
+  base-url: http://localhost:8080/engine-rest
+  worker-id: spring-boot-worker
+
+logging:
+  level:
+    org.camunda.bpm.client.spring: DEBUG
