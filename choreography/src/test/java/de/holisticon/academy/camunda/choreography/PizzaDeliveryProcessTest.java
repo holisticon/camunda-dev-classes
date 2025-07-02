@@ -1,20 +1,16 @@
 package de.holisticon.academy.camunda.choreography;
 
-import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.extension.mockito.CamundaMockito;
-import org.camunda.bpm.model.bpmn.Bpmn;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.builder.EndEventBuilder;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
@@ -24,54 +20,57 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
 @Deployment(resources = {"pizzaOrder.bpmn"})
-public class PizzaDeliveryProcessTest {
+class PizzaDeliveryProcessTest {
 
-  @Rule
-  public final ProcessEngineRule engine = createEngine();
-  private String orderId;
-  private VariableMap payload;
+    @RegisterExtension
+    static ProcessEngineExtension extension = createExtension();
 
-  @Before
-  public void before() {
-    init(engine.getProcessEngine());
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
-    CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
-      .onExecutionSetVariables(Variables.putValue(PizzaOrderProcess.Variables.DELIVERED, true));
+    private String orderId;
+    private VariableMap payload;
 
-    this.orderId = "Pizza-Order-" + UUID.randomUUID().toString();
-    this.payload = PizzaOrderProcess.createOrder();
+    @BeforeEach
+    void before() {
+        init(extension.getProcessEngine());
+        CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.MAKE_PIZZA_DELEGATE);
+        CamundaMockito.registerJavaDelegateMock(PizzaDeliveryProcess.Expressions.DELIVER_PIZZA_DELEGATE)
+                .onExecutionSetVariables(Variables.putValue(PizzaOrderProcess.Variables.DELIVERED, true));
 
-  }
+        this.orderId = "Pizza-Order-" + UUID.randomUUID().toString();
+        this.payload = PizzaOrderProcess.createOrder();
 
-  @Test
-  public void shouldDeploy() {
-    //
-  }
+    }
 
-  @Test
-  public void shouldStartEnd() {
+    @Test
+    void shouldDeploy() {
+        //
+    }
 
-    this.engine.getRuntimeService().correlateMessage(
-      PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
-      this.orderId,
-      this.payload
-    );
+    @Test
+    void shouldStartEnd() {
 
-    ProcessInstance deliveryInstance = this.engine.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(this.orderId).singleResult();
-    assertThat(deliveryInstance).isNotNull();
+        extension.getRuntimeService().correlateMessage(
+                PizzaDeliveryProcess.Expressions.MESSAGE_PLACE_ORDER,
+                this.orderId,
+                this.payload
+        );
 
-    // async on start
-    assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
-    execute(job());
+        ProcessInstance deliveryInstance = extension.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(this.orderId).singleResult();
+        assertThat(deliveryInstance).isNotNull();
 
-    assertThat(deliveryInstance).isEnded();
-    assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, true);
-  }
+        // async on start
+        assertThat(deliveryInstance).isWaitingAt(PizzaDeliveryProcess.Elements.ORDER_PLACED);
+        execute(job());
 
-  private static ProcessEngineRule createEngine() {
-    StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
-    config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
-    return config.rule();
-  }
+        assertThat(deliveryInstance).isEnded();
+        assertThat(deliveryInstance).variables().containsEntry(PizzaOrderProcess.Variables.DELIVERED, true);
+    }
 
+    static ProcessEngineExtension createExtension() {
+        StandaloneInMemoryTestConfiguration config = new StandaloneInMemoryTestConfiguration();
+        config.getProcessEnginePlugins().add(new SpinProcessEnginePlugin());
+
+        return ProcessEngineExtension.builder()
+                .useProcessEngine(config.buildProcessEngine())
+                .build();
+    }
 }
