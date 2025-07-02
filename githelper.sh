@@ -15,6 +15,7 @@ declare -a BRANCHES=(
     "class/7-human-workflow"
     "class/8-data-spin"
     "class/9-dmn"
+    "class/10-external-task"
     "class/10-listeners"
     "class/11-bpmn-error"
     "class/12-timer"
@@ -38,7 +39,7 @@ COMMAND=""
 case "$1" in
   "build")
     echo "Build command detected, will execute build of every branch"
-    COMMAND="./mvnw clean install -T8 -B"
+    COMMAND="./mvnw clean install -T8"
     ;;
   "push")
     echo "Push command detected, will push every branch"
