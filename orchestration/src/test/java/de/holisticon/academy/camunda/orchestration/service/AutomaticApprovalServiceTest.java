@@ -1,31 +1,26 @@
 package de.holisticon.academy.camunda.orchestration.service;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class AutomaticApprovalServiceTest {
+class AutomaticApprovalServiceTest {
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-  private AutomaticApprovalService service = new AutomaticApprovalService();
+    private final AutomaticApprovalService service = new AutomaticApprovalService();
 
-  @Test
-  public void testApprove() {
-    assertThat(service.approve(new ApprovalRequest(UUID.randomUUID().toString(), "request", "kermit", new BigDecimal("10")))).isTrue();
-  }
+    @Test
+    void testApprove() {
+        assertThat(service.approve(new ApprovalRequest(UUID.randomUUID().toString(), "request", "kermit", new BigDecimal("10")))).isTrue();
+    }
 
-  @Test
-  public void testError() {
-    thrown.expectMessage("Something bad happened during approval");
-    thrown.expect(RuntimeException.class);
-
-    assertThat(service.approve(new ApprovalRequest(UUID.randomUUID().toString(), "request", "kermit", new BigDecimal("83.12")))).isTrue();
-  }
-
+    @Test
+    void testError() {
+        assertThatThrownBy(() -> service.approve(new ApprovalRequest(UUID.randomUUID().toString(), "request", "kermit", new BigDecimal("83.12"))))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Something bad happened during approval");
+    }
 }
