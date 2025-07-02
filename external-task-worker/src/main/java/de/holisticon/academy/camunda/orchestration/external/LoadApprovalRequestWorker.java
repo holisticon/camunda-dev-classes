@@ -14,42 +14,37 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-@ExternalTaskSubscription(
-  topicName = "load-approval-request"
-)
+@ExternalTaskSubscription()
 public class LoadApprovalRequestWorker implements ExternalTaskHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LoadApprovalRequestWorker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadApprovalRequestWorker.class);
 
-  private final ApprovalRequestRepository approvalRequestRepository;
+    private final ApprovalRequestRepository approvalRequestRepository;
 
-  public LoadApprovalRequestWorker(ApprovalRequestRepository approvalRequestRepository) {
-    this.approvalRequestRepository = approvalRequestRepository;
-  }
+    public LoadApprovalRequestWorker(ApprovalRequestRepository approvalRequestRepository) {
+        this.approvalRequestRepository = approvalRequestRepository;
+    }
 
-  @Override
-  public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+    @Override
+    public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+        String approvalRequestId = externalTask.getVariable(Variables.APPROVAL_ID);
 
-    String id = externalTask.getVariable(Variables.APPROVAL_ID);
-
-    approvalRequestRepository.findById(id).ifPresentOrElse(
-      approvalRequest -> {
-        externalTaskService.complete(externalTask,
-          Map.of(Variables.REQUEST, approvalRequest)
+        approvalRequestRepository.findById(approvalRequestId).ifPresentOrElse(
+                approvalRequest -> {
+                    externalTaskService.complete(externalTask, Map.of(
+                            Variables.REQUEST, approvalRequest
+                    ));
+                },
+                () -> {
+                    Integer retries = Optional.ofNullable(externalTask.getRetries()).orElse(3);
+                    externalTaskService.handleFailure(
+                            externalTask.getId(),
+                            "Error executing external task",
+                            "Could not load approval request with id " + approvalRequestId,
+                            retries - 1,
+                            15_000
+                    );
+                }
         );
-        LOGGER.info("Setting request {} as variable", approvalRequest);
-      },
-      () -> {
-        int retries = Optional.ofNullable(externalTask.getRetries()).orElse(3);
-
-        externalTaskService.handleFailure(
-          externalTask.getId(),
-          "Error while loading approval request",
-          "Could not load request with id \" + id",
-          retries - 1,
-          10_000
-        );
-      }
-    );
-  }
+    }
 }
