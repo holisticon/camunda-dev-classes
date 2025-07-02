@@ -113,7 +113,6 @@
         <version>${camunda.version}</version>
         <scope>test</scope>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 
