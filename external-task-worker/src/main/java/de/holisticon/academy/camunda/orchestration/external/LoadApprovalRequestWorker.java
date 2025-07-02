@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-@ExternalTaskSubscription()
+@ExternalTaskSubscription(topicName = "load-approval-request")
 public class LoadApprovalRequestWorker implements ExternalTaskHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadApprovalRequestWorker.class);
