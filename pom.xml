@@ -32,7 +32,6 @@
 
   <modules>
     <module>orchestration</module>
-    <module>external-task-worker</module>
     <module>choreography</module>
     <module>external-task-worker</module>
   </modules>
@@ -121,12 +120,11 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-      <groupId>org.camunda.bpm</groupId>
-      <artifactId>camunda-bpm-junit5</artifactId>
-      <version>${camunda.version}</version>
-      <scope>test</scope>
-    </dependency>
-
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bpm-junit5</artifactId>
+        <version>${camunda.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
