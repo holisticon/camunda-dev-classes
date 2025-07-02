@@ -2,64 +2,68 @@ package de.holisticon.academy.camunda.orchestration.process;
 
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
+import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
-import org.camunda.bpm.spring.boot.starter.test.helper.ProcessEngineRuleRunner;
-import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 
-@RunWith(ProcessEngineRuleRunner.class)
 @Deployment(resources = "approval.bpmn")
-public class ApprovalTest {
+class ApprovalTest {
+
+  @RegisterExtension
+  static ProcessEngineExtension extension = ProcessEngineExtension.builder()
+    .useProcessEngine(
+      ProcessEngineConfiguration
+        .createStandaloneInMemProcessEngineConfiguration()
+        .buildProcessEngine()
+    )
+    .build();
+
+  private ApprovalProcessBean processBean;
+
+  @BeforeEach
+  void setUp() {
+    this.processBean = new ApprovalProcessBean(extension.getRuntimeService());
+    init(extension.getProcessEngine());
+    Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate());
+  }
+
+  @Test
+  void shouldDeploy() {
+    // no asserts, deployment would throw exception and fail the test on errors
+  }
+
+  @Test
+  public void shouldStartWaitInApprovalRequested() {
+    ProcessInstance instance = this.processBean.start();
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+  }
 
 
-    @Rule
-    public final ProcessEngineRule engine = new StandaloneInMemoryTestConfiguration().rule();
-    private ApprovalProcessBean processBean;
+  @Test
+  public void shouldStartAndLoadAndComplete() {
+    ProcessInstance instance = this.processBean.start();
 
-    @Before
-    public void before() {
-        this.processBean = new ApprovalProcessBean(this.engine.getRuntimeService());
-        init(engine.getProcessEngine());
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
 
-        Mocks.register(Expressions.LOAD_APPROVAL_REQUEST, new LoadApprovalRequestDelegate());
-    }
+    execute(job());
 
-    @Test
-    public void shouldDeploy() {
-        // no asserts, deployment would throw exception and fail the test on errors
-    }
+    assertThat(instance).isEnded();
+    assertThat(instance).hasPassedInOrder(
+      Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
 
-    @Test
-    public void shouldStartWaitInApprovalRequested() {
-        ProcessInstance instance = this.processBean.start();
-
-        assertThat(instance).isNotNull();
-        assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
-    }
-
-
-    @Test
-    public void shouldStartAndLoadAndComplete() {
-        ProcessInstance instance = this.processBean.start();
-
-        assertThat(instance).isNotNull();
-        assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
-
-        execute(job());
-
-        assertThat(instance).isEnded();
-        assertThat(instance).hasPassedInOrder(
-            Elements.APPROVAL_REQUESTED, Elements.LOAD_APPROVAL_REQUEST, Elements.COMPLETED);
-
-    }
+  }
 
 }
