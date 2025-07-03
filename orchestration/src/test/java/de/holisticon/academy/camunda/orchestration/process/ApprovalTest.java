@@ -203,9 +203,12 @@ class ApprovalTest {
   }
 
   @Test
-  public void shouldStartAndLoadAndManualAndReturnedAndCancelByTimeout() {
+  void shouldStartAndLoadAndManualAndReturnedAndCancelByTimeout() {
 
     ProcessInstance instance = this.processBean.start("1");
+
+    CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
+      .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
 
     assertThat(instance).isNotNull();
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
