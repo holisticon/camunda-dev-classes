@@ -33,7 +33,6 @@
   <modules>
     <module>orchestration</module>
     <module>choreography</module>
-    <module>external-task-worker</module>
   </modules>
 
   <dependencyManagement>
