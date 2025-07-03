@@ -182,7 +182,7 @@ class ApprovalTest {
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
 
-    @Test
+  @Test
   void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
     ProcessInstance instance = this.processBean.start("1");
 
