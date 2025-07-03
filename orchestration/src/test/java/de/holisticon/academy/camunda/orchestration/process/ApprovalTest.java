@@ -163,6 +163,26 @@ class ApprovalTest {
   }
 
   @Test
+  void shouldStartAndLoadAndApproveAndFail() {
+
+    ProcessInstance instance = this.processBean.start("1");
+
+    CamundaMockito.getJavaDelegateMock(Expressions.AUTO_APPROVE_REQUEST)
+      .onExecutionThrowBpmnError(new BpmnError(Expressions.ERROR));
+
+    assertThat(instance).isNotNull();
+    assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
+
+    execute(job());
+
+    assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
+    complete(externalTask(), Variables.putValue(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81"))));
+    execute(job());
+
+    assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
+  }
+
+    @Test
   void shouldStartAndLoadAndManualAndReturnedAndResubmit() {
     ProcessInstance instance = this.processBean.start("1");
 
