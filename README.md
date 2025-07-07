@@ -7,7 +7,7 @@ To get your first copy, please enter
     git clone https://github.com/holisticon/camunda-dev-classes.git
 
 Every task covered in the workshop is supported by a lab class.
-The branch X contains the solution for the class X. To start, checkout `master` and start with `class 1`
+**The branch X contains the solution for the class X**. To start, checkout `master` and start with `class 1`
 After you are done, checkout the branch `class/1-process-model` and inspect the solution.
 
 The following branches exist:
@@ -22,6 +22,7 @@ The following branches exist:
     class/7-human-workflow
     class/8-data-spin
     class/9-dmn
+    class/10-external-task
     class/10-listeners
     class/11-bpmn-error
     class/12-timer
@@ -266,11 +267,25 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
  * Remove delegate mock
  * Adjust mock for `loadRequest`
 
+## Class 10: External Tasks
+
+* Modify the approval process and change: "Load approval request"
+* Use `External` as implementation
+* Topic: `load-approval-request`
+* Implement the External Task worker
+  * Open Module `external-task-worker`
+  * Implement `LoadApprovalRequestWorker`
+  * Use `LoadApprovalRequestDelegate` as reference
+* Fix `ApprovalTest`
+
+![loadExternal](images/class10/load-approval-request-external.png)
+
 ## Class 10: Listeners
 
-* Add audit trail listners on en events
-* Listner should log to console
+* Add audit trail listeners on en events
+* Listener should log to console
 * Bind as `expression` with
+
 
 ## Class 11: BPMN Error
 
