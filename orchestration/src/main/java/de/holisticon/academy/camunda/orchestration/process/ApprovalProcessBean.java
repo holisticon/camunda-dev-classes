@@ -30,6 +30,7 @@ public class ApprovalProcessBean {
 
     // variables goes here
     final static String APPROVAL_ID = "approvalId";
+    final static String AMOUNT = "amount";
   }
 
   enum Expressions {
