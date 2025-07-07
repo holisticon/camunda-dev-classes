@@ -1,0 +1,37 @@
+### Start Salary increase approval (Kermit, 1000)
+POST http://localhost:8080/process/start/approval/1
+Content-Type: application/json
+
+### Start Advanced training approval (Piggy, 500)
+POST http://localhost:8080/process/start/approval/2
+Content-Type: application/json
+
+### Start Sabbatical approval (Gonzo, 0)
+POST http://localhost:8080/process/start/approval/2
+Content-Type: application/json
+
+### Start Holiday trip approval (Gonzo, 83.12)
+POST http://localhost:8080/process/start/approval/2
+Content-Type: application/json
+
+### List Tasks
+GET http://localhost:8080/task
+Accept: *
+
+### Task Operations
+@taskId = cb75354f-5b2c-11f0-a2a5-2238d58f34cb
+
+### Approved
+POST http://localhost:8080/task/approve/{{taskId}}/APPROVED
+
+### Rejected
+POST http://localhost:8080/task/approve/{{taskId}}/REJECTED
+
+### Returned to originator
+POST http://localhost:8080/task/approve/{{taskId}}/RETURNED
+
+### Re-submitted
+POST http://localhost:8080/task/amend/{{taskId}}/RESUBMITTED
+
+### Rejected
+POST http://localhost:8080/task/amend/{{taskId}}/CANCELLED
