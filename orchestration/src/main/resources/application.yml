@@ -23,7 +23,7 @@ camunda:
     filter:
       create: All
     history-level: activity
-    id-generator: strong
+    id-generator: simple
     database:
       schema-update: true
       type: h2
