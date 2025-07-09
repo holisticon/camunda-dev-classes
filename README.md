@@ -12,50 +12,57 @@ After you are done, checkout the branch `class/1-process-model` and inspect the 
 
 The following branches exist:
 
-    master
-    class/1-process-model
-    class/2-java-delegate
-    class/3-test-it
-    class/4-test-it-to-the-end
-    class/5-delegate-testing
-    class/6-automatic-approval
-    class/7-human-workflow
-    class/8-data-spin
-    class/9-dmn
-    class/10-external-task
-    class/10-listeners
-    class/11-bpmn-error
-    class/12-timer
-    class/13-messages
-    class/14-external-task 
-    class/15-camunda-bpm-data
-    class/16-variable-guard 
-    class/17-acl 
-    class/18-jgiven
+```bash
+master
+class/1-process-model
+class/2-java-delegate
+class/3-test-it
+class/4-test-it-to-the-end
+class/5-delegate-testing
+class/6-automatic-approval
+class/7-human-workflow
+class/8-data-spin
+class/9-dmn
+class/10-external-task
+class/10-listeners
+class/11-bpmn-error
+class/12-timer
+class/13-messages
+class/14-external-task 
+class/15-camunda-bpm-data
+class/16-variable-guard 
+class/17-acl 
+class/18-jgiven
+```
 
 Please change the branches using:
 
-    git stash
-    
-    # or to keep yours
-    git add --all
-    git commit -m "my solution"
-    
-    # then
-    git checkout class/<class-name>
+```bash
+git stash
 
+# or to keep yours
+git add --all
+git commit -m "my solution"
+
+# then
+git checkout class/<class-name>
+```
 
 ## Building
 
 In order to build the project, please enter
 
-    ./mvnw clean install
+```bash
+./mvnw clean install
+```
 
 ## Running examples
 
 In order to run the project, please enter
 
-    ./mvnw spring-boot:run
+```bash
+./mvnw spring-boot:run
+```
 
 ### URLs
 
@@ -126,7 +133,6 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ```
 
 > NOTES:
->
 > * See console for log
 
 ## Class 3: Test it!
@@ -150,6 +156,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
     assertThat(instance).isWaitingAt(Elements.APPROVAL_REQUESTED);
   }
 ```
+
 > NOTES:
 >
 > * Look on the empty test method
@@ -182,8 +189,8 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 
   }
 ```
+
 > NOTES:
->
 > * Try without mock first and see what happens!
 
 ## Class 5: Delegate testing
@@ -315,7 +322,9 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ### Safe correlation
 
 ```java
-Optional
+
+public void correlate(String messageName, String businessKey) {
+  Optional
     .ofNullable(
         this.runtimeService.createExecutionQuery()
             .processInstanceBusinessKey(businessKey)
@@ -326,7 +335,7 @@ Optional
             .processInstanceId(e.getProcessInstanceId())
             .correlate()
     );
-
+}
 ```
 
 * Start via swagger
