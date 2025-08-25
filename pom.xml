@@ -23,7 +23,7 @@
     <camunda.version.ee>7.23.3-ee</camunda.version.ee>
     <camunda-commons.version>${camunda.version}</camunda-commons.version>
 
-    <holunda-c7.version>2025.06.1</holunda-c7.version>
+    <holunda-c7.version>2025.07.1</holunda-c7.version>
 
     <springboot.version>3.5.3</springboot.version>
     <version.camunda.spin>${camunda.version}</version.camunda.spin>
