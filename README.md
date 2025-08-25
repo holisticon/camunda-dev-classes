@@ -68,7 +68,7 @@ In order to run the project, please enter
 
 * Camunda Cockpit: http://localhost:8080/camunda/app/cockpit/default/
 * Camunda Tasklist: http://localhost:8080/camunda/app/tasklist/default/
-* Swagger-UI: http://localhost:8080/swagger-ui/
+* Swagger-UI: http://localhost:8080/swagger-ui/index.html
 
 # Lab classes
 

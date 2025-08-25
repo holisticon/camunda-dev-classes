@@ -44,9 +44,6 @@ out/
 .settings/
 .theia/
 
-# jEnv
-.java-version
-
 # JGiven
-orchestration/jgiven-reports
+orchestration/jgiven-reports/
 choreography/jgiven-reports/
