@@ -7,11 +7,11 @@ POST http://localhost:8080/process/start/approval/2
 Content-Type: application/json
 
 ### Start Sabbatical approval (Gonzo, 0)
-POST http://localhost:8080/process/start/approval/2
+POST http://localhost:8080/process/start/approval/3
 Content-Type: application/json
 
 ### Start Holiday trip approval (Gonzo, 83.12)
-POST http://localhost:8080/process/start/approval/2
+POST http://localhost:8080/process/start/approval/4
 Content-Type: application/json
 
 ### List Tasks
