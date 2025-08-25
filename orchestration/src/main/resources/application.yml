@@ -20,7 +20,7 @@ camunda:
     default-serialization-format: application/json
     authorization:
       enabled: false
-    history-level: activity
+    history-level: full
     id-generator: simple
     database:
       schema-update: true
@@ -35,7 +35,12 @@ camunda:
     login:
       enabled: true
       user-id: admin
+    generic-properties:
+      properties:
+        historyTimeToLive: P1D
 
 springdoc:
-  packagesToScan: de.holisticon.academy.camunda.orchestration.rest
-  pathsToMatch: /**
+  packages-to-scan: de.holisticon.academy.camunda.orchestration.rest
+  paths-to-match: /**
+  swagger-ui:
+    try-it-out-enabled: true
