@@ -74,21 +74,23 @@ In order to run the project, please enter
 
 ## Class 1: Model, start, fail
 
-In this class you will create a trivial process model in BPMN that is executed by the Camunda engine. If this process is started, the id of approval request is provided as a process variable `approvalId`. The process should load the approval for the provided id using a service task. Here is the resulting process model:
+In this class you will create a trivial process model in BPMN that is executed by the Camunda engine. If this process is started, 
+the id of approval request is provided as a process variable `approvalId`. The process should load the approval for the provided 
+id using a service task. Here is the resulting process model:
 
 ![class 1](images/class1/approval.png)
 
 To complete this class, execute the following steps:
 
-* Create a process model
+* Create a process model (File > New File > BPMN Diagram (Camunda 7))
   * Put it into (`src/main/resources/approval.bpmn`)
-* Process **General Id**: `approval`
-* Start event: **async after**
+* Process **ID**: `approval`
+* Start event: **Asynchronous Continuation > After**
 * Service task:
-  * id: `service_load_approval_request`
-  * name: `Load approval request`
-  * details / implementation: `delegate expression`
-  * detail / delegate expression: `${loadApprovalRequestDelegate}`
+  * ID: `service_load_approval_request`
+  * Name: `Load approval request`
+  * Implementation > Type `Delegate expression`
+  * Implementation > Delegate expression: `${loadApprovalRequestDelegate}`
 * Start process using Swagger-UI
 * Inspect in Cockpit (login: admin/admin)
 
@@ -102,7 +104,8 @@ To complete this class, execute the following steps:
 
 ## Class 2: Java Delegate
 
-In the previous class, you referenced a bean from a service task. In this task, you will provide the implementation of this bean implemeenting a Java Delegate.
+In the previous class, you referenced a bean from a service task. In this task, you will provide the 
+implementation of this bean implementing a Java Delegate.
 
 To complete this class, execute the following steps:
 
@@ -165,7 +168,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 
 ```java
 
-  @Before
+  @BeforeEach
   public void before() {
     // ...
 
@@ -201,7 +204,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
   * Store amount (`Variables.AMOUNT`)
 * Implement the delegate test
   * Use `Mockito.when().thenReturn()`
-  * Use mocking framework: `camunda-bpm-mockito`
+  * Use mocking framework: `camunda-platform-7-mockito`
   * Use `DelegateExecutionFake`
   * Use Mockito `verify()`
 
@@ -230,10 +233,10 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 
 * Add user tasks
 * Approve request
-  * `task-definition-key`: `task_approve_request`
+  * `General > ID`: `task_approve_request`
   * set variable `approvalDecision` to one of <br> `APPROVED`, `REJECTED`, `RETURNED`
 * Amend request
-  * `task-definition-key`: `task_amend_request`
+  * `General > ID`: `task_amend_request`
   * set variable `amendAction` to one of <br> `CANCELLED`, `RESUBMIT`
 * Test it!
 * Try it
@@ -264,12 +267,19 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ## Class 9: Business Rules with DMN
 
 * Use business rule task for <br> `Determine approval strategy`
+* `File > New File> DMN (Camunda 7 diagram)`
+* Decision:
+  * `General > ID`: `determineApprovalStrategy`
 * Implement the DMN table
 * Access `request.amount`
 * Policy: First
-* Use `singleEntry` as result type
+* Process:
+  * `Implementation > Type`: `DMN`
+  * `Implementation > Decision Reference` : `determineApprovalStrategy`
+  * `Implementation > Result Variable`: `approvalStrategy`
+  * `Implementaiton > Map decision result`: `singleEntry (TypedValue)`
 * Adjust the test
- * Deploy DMN
+ * Deploy DMN (set TTL)
  * Inspect the engine config
  * Remove delegate mock
  * Adjust mock for `loadRequest`
