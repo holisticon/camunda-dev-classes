@@ -5,7 +5,7 @@ import com.tngtech.jgiven.junit5.DualScenarioTest;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
-import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.Writers;
 import io.holunda.camunda.bpm.extension.jgiven.ProcessStage;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineException;
@@ -15,7 +15,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
-import org.camunda.bpm.extension.mockito.CamundaMockito;
+import org.camunda.community.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.jupiter.api.Test;
@@ -130,7 +130,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED).build(),
         true
       )
     ;
@@ -160,7 +160,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED).build(),
         true
       )
     ;
@@ -190,7 +190,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
         true
       )
     ;
@@ -199,7 +199,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED).build(),
         true
       )
     ;
@@ -229,7 +229,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
         true
       )
       .and()
@@ -263,7 +263,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build(),
         true
       )
     ;
@@ -272,7 +272,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
     ;
     when()
       .task_is_completed_with_variables(
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build(),
         true
       )
       .and()
@@ -341,7 +341,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
       external_task_exists("load-approval-request");
       external_task_is_completed(
         "load-approval-request",
-        CamundaBpmData.builder().set(ApprovalProcessBean.Variables.REQUEST, approvalRequest).build(),
+        Writers.C7.builder().set(ApprovalProcessBean.Variables.REQUEST, approvalRequest).build(),
         true
       );
       return self();
@@ -368,7 +368,7 @@ class ApprovalScenarioTest extends DualScenarioTest<ApprovalScenarioTest.GivenWh
 
     public GivenWhenStage task_is_completed_without_variables() {
       try {
-        task_is_completed_with_variables(CamundaBpmData.builder().build());
+        task_is_completed_with_variables(Writers.C7.builder().build());
       } catch (ProcessEngineException e) {
       }
 
