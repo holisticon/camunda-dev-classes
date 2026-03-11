@@ -28,7 +28,7 @@
     <springboot.version>3.5.4</springboot.version>
     <version.camunda.spin>${camunda.version}</version.camunda.spin>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
-    <springdoc.version>2.8.9</springdoc.version>
+    <springdoc.version>3.0.2</springdoc.version>
   </properties>
 
   <modules>
