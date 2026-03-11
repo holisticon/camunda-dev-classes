@@ -224,7 +224,7 @@
           <!-- java compiler -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.0</version>
+          <version>3.14.1</version>
         </plugin>
 
         <plugin>
@@ -298,7 +298,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.3</version>
+          <version>3.5.4</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <runOrder>random</runOrder>
@@ -315,7 +315,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.5.3</version>
+          <version>3.5.4</version>
         </plugin>
 
       </plugins>
