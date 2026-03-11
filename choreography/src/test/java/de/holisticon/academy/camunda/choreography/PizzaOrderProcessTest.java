@@ -1,7 +1,7 @@
 package de.holisticon.academy.camunda.choreography;
 
 import de.holisticon.academy.camunda.choreography.listener.AuditListener;
-import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.Writers;
 import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -9,7 +9,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
 import org.camunda.bpm.engine.variable.VariableMap;
-import org.camunda.bpm.extension.mockito.CamundaMockito;
+import org.camunda.community.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,7 +99,7 @@ class PizzaOrderProcessTest {
         extension.getRuntimeService().correlateMessage(
                 PizzaOrderProcess.Expressions.MESSAGE_PIZZA_RECEIVED,
                 orderId,
-                CamundaBpmData.builder()
+                Writers.C7.builder()
                         .set(PizzaOrderProcess.Variables.DELIVERED, true)
                         .build()
         );
