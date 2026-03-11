@@ -1,0 +1,37 @@
+name: Development branches
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '*'
+      - 'class/*'
+      - 'master'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Expose branch name
+        run: echo ${{ github.ref }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version-file: .java-version
+          distribution: zulu
+          cache: maven
+
+      - name: Prepare mvnw
+        run: chmod +x ./mvnw
+
+      - name: Build
+        run: ./mvnw -ntp clean install
