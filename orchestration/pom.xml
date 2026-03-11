@@ -70,8 +70,8 @@
   </dependency>
 
     <dependency>
-      <groupId>org.camunda.bpm.extension.mockito</groupId>
-      <artifactId>camunda-bpm-mockito</artifactId>
+      <groupId>io.holunda.c7</groupId>
+      <artifactId>c7-mockito</artifactId>
     </dependency>
 
   </dependencies>
