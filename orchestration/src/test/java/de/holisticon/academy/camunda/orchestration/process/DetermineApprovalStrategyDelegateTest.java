@@ -1,6 +1,6 @@
 package de.holisticon.academy.camunda.orchestration.process;
 
-import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
+import org.camunda.community.mockito.delegate.DelegateExecutionFake;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
