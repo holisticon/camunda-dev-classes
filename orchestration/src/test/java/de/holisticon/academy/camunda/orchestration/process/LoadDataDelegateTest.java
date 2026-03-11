@@ -3,7 +3,7 @@ package de.holisticon.academy.camunda.orchestration.process;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Variables;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
-import io.holunda.camunda.bpm.data.CamundaBpmData;
+import io.holunda.camunda.bpm.data.Readers;
 import org.camunda.community.mockito.delegate.DelegateExecutionFake;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,7 +36,7 @@ class LoadDataDelegateTest {
     verify(approvalRequestRepository).findById(approvalRequest.getId());
     verifyNoMoreInteractions(approvalRequestRepository);
 
-    final var reader = CamundaBpmData.reader(execution);
+    final var reader = Readers.C7.reader(execution);
     assertThat(reader.get(Variables.REQUEST)).isNotNull();
     assertThat(reader.get(Variables.REQUEST)).isEqualTo(approvalRequest);
   }
