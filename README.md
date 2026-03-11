@@ -50,7 +50,7 @@ git checkout class/<class-name>
 
 ## Building
 
-In order to build the project, please enter
+To build the project, please enter
 
 ```bash
 ./mvnw clean install
@@ -58,7 +58,7 @@ In order to build the project, please enter
 
 ## Running examples
 
-In order to run the project, please enter
+To run the project, please enter
 
 ```bash
 ./mvnw spring-boot:run
@@ -91,10 +91,10 @@ To complete this class, execute the following steps:
   * Name: `Load approval request`
   * Implementation > Type `Delegate expression`
   * Implementation > Delegate expression: `${loadApprovalRequestDelegate}`
-* Start process using Swagger-UI
+* Start the process using Swagger-UI
 * Inspect in Cockpit (login: admin/admin)
 
-> All ids in process model are using **Snake Case**
+> All ids in the process model are using **Snake Case**
 > All references to code are using **Camel case**
 
 > NOTES:
@@ -112,7 +112,7 @@ To complete this class, execute the following steps:
 * Create a Spring Component
 * Call it `LoadApprovalRequestDelegate`
 * Implement `JavaDelegate` interface
-* Start process using Swagger-UI
+* Start the process using Swagger-UI
 
 
 ```java
@@ -136,7 +136,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ```
 
 > NOTES:
-> * See console for log
+> * See console log
 
 ## Class 3: Test it!
 
@@ -162,7 +162,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 
 > NOTES:
 >
-> * Look on the empty test method
+> * Look at the empty test method
 
 ## Class 4: Test it to the end
 
@@ -300,7 +300,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 ## Class 10: Listeners
 
 * Add audit trail listeners on en events
-* Listener should log to console
+* Listener should log to the console
 * Bind as `expression` with
 
 
@@ -310,7 +310,7 @@ public class LoadApprovalRequestDelegate implements JavaDelegate {
 
 * Integrate BPMN Error with fallback to manual approval
 * Adjust the test
- * Add new test case
+ * Add a new test case
  * Change the `automatic approval delegate` stub
 * Adjust `automatic approval delegate`
 * Try with request `"4"`
@@ -358,11 +358,11 @@ public void correlate(String messageName, String businessKey) {
 * Implement the delegate `DeliverPizzaDelegate`
  * set `delivered` to `true`
  * pass only the `delivered` back
-* Checkout the tests
+* Check out the tests
 
 ## Class 14: External Tasks
 
-* Add new step: "Pack pizza" after the pizza was made
+* Add a new step: "Pack pizza" after the pizza was made
 * Use `External` as implementation
 * Topic: `pizzaOrder:packPizza`
 * Implement the External Task worker
@@ -420,7 +420,7 @@ externalTaskService.fetchAndLock(5, WORKER_ID)
   * Refactor all tests
   * Try not to use `.getName()` as a quick-fix
 * Use different approaches where applicable:
-  * `get`, `set`, `builder`, `reader`, `writer` ...
+  * `get`, `set`, `Writers.C7.builder`, `Readers.C7.reader`, `Writers.C7.writer` ...
 
 ## Class 16: Variable Guards
 
@@ -430,7 +430,7 @@ externalTaskService.fetchAndLock(5, WORKER_ID)
 
 ![img](images/class16/insert-guard-here.png)
 
-## Class 17: Anti Corruption Layer
+## Class 17: Anti-Corruption Layer
 
 * Provide an Anti Corruption Layer for "Pack pizza"
   * Ensure that the ExternalTaskWorker can only complete when `PACKED` is set
@@ -440,9 +440,9 @@ externalTaskService.fetchAndLock(5, WORKER_ID)
 ## Class 18: Camunda BPM JGiven
 
 * Explore ApprovalScenarioTest
-  * Not a single assert written manually --> `ThenStage` is empty!
+  * Not a single `assert` is written manually --> `ThenStage` is empty!
   * Only custom steps specific for this process in `GivenWhenStage`
-  * Everything else is coming from camunda-bpm-jgiven
+  * Everything else is coming from `c7-jgiven`
 * Complete the missing scenarios
 * Run `./mvnw clean install`
 * Explore the HTML report in <br>`orchestration/target/jgiven-reports/html/index.html`
