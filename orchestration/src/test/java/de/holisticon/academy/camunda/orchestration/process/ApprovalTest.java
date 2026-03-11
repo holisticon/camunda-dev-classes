@@ -3,17 +3,17 @@ package de.holisticon.academy.camunda.orchestration.process;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Elements;
 import de.holisticon.academy.camunda.orchestration.process.ApprovalProcessBean.Expressions;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
-import io.holunda.camunda.bpm.data.CamundaBpmData;
 import io.holunda.camunda.bpm.data.guard.integration.GuardViolationException;
 import org.assertj.core.api.Assertions;
+import io.holunda.camunda.bpm.data.Writers;
 import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
-import org.camunda.bpm.extension.mockito.CamundaMockito;
 import org.camunda.bpm.spring.boot.starter.test.helper.StandaloneInMemoryTestConfiguration;
+import org.camunda.community.mockito.CamundaMockito;
 import org.camunda.spin.plugin.impl.SpinProcessEnginePlugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,7 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("7.81")))
         .build()
     );
@@ -94,7 +94,7 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
@@ -119,7 +119,7 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("83.12")))
         .build()
     );
@@ -143,7 +143,7 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
@@ -163,14 +163,14 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_APPROVED).build());
     execute(job());
 
     assertThat(instance).isEnded();
@@ -190,14 +190,14 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_REJECTED).build());
     execute(job());
 
 
@@ -218,18 +218,18 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_AMEND_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_CANCELLED).build());
     execute(job());
 
     assertThat(instance).isEnded();
@@ -250,14 +250,14 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
     execute(job());
 
     ClockUtil.offset(Duration.ofMinutes(5).toMillis());
@@ -281,23 +281,23 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.APPROVAL_DECISION, ApprovalProcessBean.Values.APPROVAL_DECISION_RETURNED).build());
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.USER_AMEND_REQUEST);
-    this.processBean.complete(task().getId(), CamundaBpmData.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build());
+    this.processBean.complete(task().getId(), Writers.C7.builder().set(ApprovalProcessBean.Variables.AMEND_ACTION, ApprovalProcessBean.Values.AMEND_ACTION_RESUBMITTED).build());
     execute(job());
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
@@ -318,7 +318,7 @@ class ApprovalTest {
 
     assertThat(instance).isWaitingAt(Elements.LOAD_APPROVAL_REQUEST);
     complete(externalTask(),
-      CamundaBpmData.builder()
+      Writers.C7.builder()
         .set(ApprovalProcessBean.Variables.REQUEST, new ApprovalRequest("id", "subj", "kermit", new BigDecimal("117.81")))
         .build()
     );
@@ -328,7 +328,7 @@ class ApprovalTest {
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
 
     final var task = task();
-    Assertions.assertThatThrownBy(() -> this.processBean.complete(task.getId(), CamundaBpmData.builder().build()))
+    Assertions.assertThatThrownBy(() -> this.processBean.complete(task.getId(), Writers.C7.builder().build()))
       .hasRootCauseInstanceOf(GuardViolationException.class);
     assertThat(instance).isWaitingAt(Elements.USER_APPROVE_REQUEST);
   }
