@@ -4,7 +4,7 @@ import de.holisticon.academy.camunda.orchestration.service.ApprovalRequest;
 import de.holisticon.academy.camunda.orchestration.service.ApprovalRequestRepository;
 import de.holisticon.academy.camunda.orchestration.service.AutomaticApprovalService;
 import io.holunda.camunda.bpm.data.CamundaBpmData;
-import org.camunda.bpm.extension.mockito.delegate.DelegateExecutionFake;
+import org.camunda.community.mockito.delegate.DelegateExecutionFake;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
